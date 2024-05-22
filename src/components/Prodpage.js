@@ -411,10 +411,10 @@ function Prodpage() {
           {addrev ? (
             <>
               <div style={{
-                maxWidth: "60%",
+                maxWidth: "100%",
+                width : "auto",
                 margin: "auto",
                 textAlign: "center",
-                marginTop: "140px",
                 marginRight: "10px",
                 boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
                 borderRadius: "20px",
@@ -485,14 +485,15 @@ function Prodpage() {
                     </select>
                   </div>
                   <button type="submit" style={{
-                    padding: "12px 24px",
+                    padding: "12px 35px",
                     cursor: "pointer",
                     backgroundColor: "#007bff",
                     color: "#fff",
                     borderRadius: "5px",
                     border: "none",
                     fontSize: "18px",
-                    fontWeight: "bold"
+                    fontWeight: "bold",
+                    whiteSpace : "nowrap"
                   }}>
                     Submit Review
                   </button>
