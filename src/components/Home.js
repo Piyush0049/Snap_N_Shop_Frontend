@@ -63,7 +63,7 @@ function Home() {
                 }}>
                     <h1 style={{
                         fontFamily: "fantasy",
-                        fontSize: x > 536 ? '50px' : "40px",
+                        fontSize: x > 536 ? '50px' : "35px",
                         whiteSpace: 'nowrap'
                     }}>
                         WELCOME TO SNAP & SHOP

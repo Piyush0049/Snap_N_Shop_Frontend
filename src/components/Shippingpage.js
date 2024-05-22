@@ -6,14 +6,29 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const LocationSelector = () => {
+  const [x, setx] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setx(window.innerWidth);
+
+    window.addEventListener('resize', handleResize);
+
+    if (localStorage.getItem("width") !== null) {
+      setx(parseInt(localStorage.getItem("width")));
+    } else {
+      setx(window.innerWidth);
+    }
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const navigate = useNavigate();
-  
+
   // Initialize shippingdet as null
   let shippingdet = null;
-  
+
   // Retrieve shippingdetails from localStorage
   const a = localStorage.getItem("shippingdetails");
-  
+
   // Parse shippingdetails if it's a valid JSON string
   if (a && a !== "null") {
     try {
@@ -108,9 +123,9 @@ const LocationSelector = () => {
     },
     container: {
       maxWidth: "80%",
-      maxHeight : '2000px',
-      height : "auto",
-      width : "auto",
+      maxHeight: '2000px',
+      height: "auto",
+      width: "auto",
       margin: 'auto',
       padding: '20px',
       border: '1px solid #ccc',
@@ -146,7 +161,7 @@ const LocationSelector = () => {
     proceedButton: {
       marginTop: '30px',
       padding: '15px 30px',
-      fontSize: "18px" ,
+      fontSize: "18px",
       backgroundColor: '#007bff',
       color: '#fff',
       border: 'none',
@@ -168,21 +183,21 @@ const LocationSelector = () => {
 
   return (
     <div style={{
-      backgroundImage: `url(${backimage})`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight:  '1000px', // Adjusted height based on window width
-      width : "100%",
+      backgroundImage: `url(${backimage})`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight: '1000px', // Adjusted height based on window width
+      width: "100%",
       height: "auto",
-      paddingTop : "90px"
+      paddingTop: "90px"
     }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Link to="/mycart" style={{ fontSize:'25px' , color: "green", textDecoration: "none" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
+        <Link to="/mycart" style={{ fontSize: x > 1090 ? '25px' : "16px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
         <hr style={styles.hr2} />
-        <Link style={{ fontSize:  '25px', color: "red", textDecoration: "none" }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
+        <Link style={{ fontSize: x > 1090 ? '25px' : "16px", color: "red", textDecoration: "none", whiteSpace: "nowrap" }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
         <hr style={styles.hr2} />
-        <Link style={{ fontSize: '25px', color: "red", textDecoration: "none" }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
+        <Link style={{ fontSize: x > 1090 ? '25px' : "16px", color: "red", textDecoration: "none", whiteSpace: "nowrap" }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
       </div>
 
       <div style={styles.container}>
-        <h2 style={{ marginBottom: "35px", textAlign: "center"}}><b>Add Shipping Details : </b></h2>
+        <h2 style={{ marginBottom: "35px", textAlign: "center" }}><b>Add Shipping Details : </b></h2>
         <div style={styles.selectContainer}>
           <label style={styles.label}>Name:</label>
           <input

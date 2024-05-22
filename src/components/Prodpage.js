@@ -109,7 +109,7 @@ function Prodpage() {
       backgroundColor: 'rgba(255, 255, 255, 0.9)',
       borderRadius: '10px',
       boxShadow: '0 10px 20px rgba(0, 0, 0, 0.1)',
-      padding: '40px',
+      padding: '20px',
       display: 'flex',
       marginTop: '40px',
       flexDirection: x > 1264 ? "row" : "column",
@@ -255,25 +255,25 @@ function Prodpage() {
         <div style={{
           marginRight: x > 1264 ? "190px" : null,
         }}>
-          <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", width: "250px", marginLeft: "2px", color: "black" }} />
-          <h1 style={{ fontSize: "32px", marginBottom: '20px', fontWeight: 'bolder', color: '#333' }}>
+          <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", maxWidth: "250px", width : "auto", marginLeft: "2px", color: "black" }} />
+          <h1 style={{ fontSize: x > 460 ? "32px" : "26px", marginBottom: '20px', fontWeight: 'bolder', color: '#333', whiteSpace : "nowrap" }}>
             {product.name}
           </h1>
           <p style={{ fontSize: "18px", marginBottom: '30px', lineHeight: '1.6' }}>
             {product.description}
           </p>
 
-          <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", width: "250px", marginLeft: "2px", color: "black" }} />
+          <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", maxWidth: "250px", width : "auto", marginLeft: "2px", color: "black" }} />
 
-          <h1 style={{ fontSize: "36px", marginBottom: '20px', fontWeight: 'bold', color: '#333', marginTop: "4px" }}>
+          <h1 style={{ fontSize: x > 460 ? "36px" : "30px", marginBottom: '20px', fontWeight: 'bold', color: '#333', marginTop: "4px" }}>
             ₹{product.price}
           </h1>
-          <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", width: "250px", marginLeft: "2px", color: "black" }} />
+          <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", maxWidth: "250px", width : "auto", marginLeft: "2px", color: "black" }} />
 
           <p style={{ fontSize: "18px", marginBottom: '20px', lineHeight: '1.6', display: "flex" }}>
             <p style={{ fontWeight: 'bold' }}> Category : </p> <p style={{ marginLeft: "5px" }}>{product.category}</p>
           </p>
-          <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", width: "250px", marginLeft: "2px", color: "black" }} />
+          <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", maxWidth: "250px", width : "auto", marginLeft: "2px", color: "black" }} />
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
             {product.stock > 0 ?
               (<button
@@ -316,7 +316,7 @@ function Prodpage() {
             }
           </div>
 
-          <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", width: "250px", marginLeft: "2px", color: "black" }} />
+          <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", maxWidth: "250px", width : "auto", marginLeft: "2px", color: "black" }} />
 
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
             <h5 style={styles.username}>Quantity : </h5>
@@ -387,7 +387,7 @@ function Prodpage() {
                 Status : <span style={{ fontSize: "18px", color: "red" }}>Out Of Stock</span>
               </p>)
             }
-            <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", width: "250px", marginLeft: x > 1264 ? "2px" : null, color: "black" }} />
+            <hr style={{ height: "3px", borderWidth: "2px", borderColor: "black", maxWidth: "250px", width : "auto", marginLeft: x > 1264 ? "2px" : null, color: "black" }} />
             <button
               onClick={() => subreview()}
               style={{

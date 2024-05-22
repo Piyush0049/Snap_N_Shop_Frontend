@@ -165,11 +165,11 @@ const Payment = () => {
   return (
     <div style={styles.container}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop:  "60px" }}>
-        <Link to="/mycart" style={{ fontSize: '25px', color: "green", textDecoration: "none" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
-        <hr style={styles.hr2} />
-        <Link style={{ fontSize: '25px', color: "green", textDecoration: "none" }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
-        <hr style={styles.hr2} />
-        <Link style={{ fontSize: '25px', color: "red", textDecoration: "none" }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
+                <Link to="/mycart" style={{ fontSize: x > 1090 ? '25px' : "18px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
+                <hr style={styles.hr2} />
+                <Link style={{ fontSize: x > 1090 ? '25px' : "18px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
+                <hr style={styles.hr2} />
+                <Link style={{ fontSize: x > 1090 ? '25px' : "18px", color: "red", textDecoration: "none", whiteSpace: "nowrap" }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
       </div>
       <div style={{ height: x > 743 ? "500px" :"300px", opacity: 0.8, paddingTop: '40px', display: 'flex', justifyContent: 'center'  }}>
         <div style={styles.cardForm}>

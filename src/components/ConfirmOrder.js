@@ -120,11 +120,11 @@ const ConfirmOrder = () => {
             height: "auto", opacity: 0.9, paddingTop: '80px',
         }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Link to="/mycart" style={{ fontSize: '25px', color: "green", textDecoration: "none" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
+                <Link to="/mycart" style={{ fontSize: x > 1090 ? '25px' : "16px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
                 <hr style={styles.hr2} />
-                <Link style={{ fontSize: '25px', color: "red", textDecoration: "none" }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
+                <Link style={{ fontSize: x > 1090 ? '25px' : "16px", color: "red", textDecoration: "none", whiteSpace: "nowrap" }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
                 <hr style={styles.hr2} />
-                <Link style={{ fontSize: '25px', color: "red", textDecoration: "none" }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
+                <Link style={{ fontSize: x > 1090 ? '25px' : "16px", color: "red", textDecoration: "none", whiteSpace: "nowrap" }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
             </div>
             <div style={styles.container}>
                 <h1 style={styles.header}><b>Order Summary : </b></h1>
@@ -145,7 +145,7 @@ const ConfirmOrder = () => {
 
                 <div style={{ display: x > 984 ? "flex" : "block", textAlign: x > 984 ? "left" : "center" }}>
 
-                    <div style={{ marginLeft: x > 984 ? "70px" : null, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom : "70px" }}>
+                    <div style={{ marginLeft: x > 984 ? "70px" : null, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: "70px" }}>
                         <h2 style={{ marginBottom: "40px" }}><b>Shipping Address : </b></h2>
                         <div style={styles.grandTotalContainer2}>
                             <div>Name :</div>
@@ -173,8 +173,8 @@ const ConfirmOrder = () => {
                         </div>
                     </div>
 
-                    
-                    <div style={{ marginLeft: x > 984 ? "30%" : null, display: x > 984 ? "null" : 'flex', flexDirection: x > 984 ? "null" : 'column', alignItems: x > 984 ? "null" : 'center',  paddingBottom : x > 984 ? "null" : "70px"  }}>
+
+                    <div style={{ marginLeft: x > 984 ? "30%" : null, display: x > 984 ? "null" : 'flex', flexDirection: x > 984 ? "null" : 'column', alignItems: x > 984 ? "null" : 'center', paddingBottom: x > 984 ? "null" : "70px" }}>
                         <h2><b>Invoice Details : </b></h2>
                         <div style={styles.grandTotalContainer}>
                             <div>Sub Total:</div>

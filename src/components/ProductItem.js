@@ -107,9 +107,9 @@ function ProductItem({ product, innerWidth }) {
               </span>
             </h6>
           </Link>
-          <span style={{ position: "relative", left: "45%", bottom : "30px", fontFamily: "monospace", fontSize: x > 571 ? '19px' : "11px" }}>{rev}</span>
+          <span style={{ position: "relative", left: "45%", bottom : "30px", fontFamily: "monospace", fontSize: x > 571 ? '19px' : "13px" }}>{rev}</span>
           {/* Adjust font size for reviews */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5%', fontSize: "40px" }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5%', fontSize: x > 571 ? "40px" : "30px" }}>
             <ReactStars {...ratings} />
           </div>
         </div>
