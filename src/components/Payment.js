@@ -159,6 +159,8 @@ const Payment = () => {
       borderWidth: "2px",
       opacity: 0.6,
       width: "300px",
+      backgroundColor: 'white',
+    borderColor: 'white',
     },
   };
 

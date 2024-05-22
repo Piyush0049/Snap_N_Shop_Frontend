@@ -54,7 +54,10 @@ const MyCart = () => {
         },
         cartContainer: {
             width : "auto",
-            padding: '30px',
+            paddingLeft: x > 505 ? '30px' : null,
+            paddingRight: x > 505 ? '30px' : null,
+            paddingTop :  "30px",
+            paddingBottom : "30px",
             borderRadius: '20px',
             background: 'rgba(255, 255, 255, 0.9)',
             boxShadow: '0px 20px 20px rgba(0, 0, 0, 0.1)',
@@ -86,7 +89,7 @@ const MyCart = () => {
         quantityButton: {
             backgroundColor: '#5ABCE6',
             color: '#fff',
-            padding: '5px',
+            padding: x > 505 ? '5px' : null,
             borderRadius: '5px',
             border: 'none',
             fontSize:'20px' ,
@@ -94,12 +97,13 @@ const MyCart = () => {
             transition: 'background-color 0.3s',
             marginRight: '5px',
             boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
-            width: '21px',
+            width: "21px",
+
         },
         quantityButton2: {
             backgroundColor: 'gray',
             color: '#fff',
-            padding: '5px',
+            padding: x > 505 ? '5px' : null,
             borderRadius: '5px',
             border: 'none',
             fontSize: '20px',
@@ -179,7 +183,7 @@ const MyCart = () => {
 
             </div>
             <div style={styles.cartContainer}>
-                <h1 style={{ textAlign: 'center', marginBottom: '30px', fontSize:'45px'  }}><b>Your Cart : </b></h1>
+                <h1 style={{ textAlign: 'center', marginBottom: '30px', fontSize: x > 878 ? '45px' : "33px"  }}><b>Your Cart : </b></h1>
                 {cartitems === null ? (
                     <div style={{ textAlign: 'center', marginTop: '50px', marginBottom: '50px' }}>
                         <h2 style={{ fontSize: '25px' , fontWeight: 'bold', color: '#333' }}>Your cart is empty</h2>
@@ -189,10 +193,10 @@ const MyCart = () => {
                         <div key={p} style={styles.product}>
                             <img style={styles.image} src={p.image} alt={p.name} />
                             <div style={styles.details}>
-                                <h3 style={{ marginBottom: '10px', fontSize:'20px', fontWeight: 'bold' }}>{p.name}</h3>
-                                <p style={{ marginBottom: '5px', color: '#666', fontSize:   '16px' }}>Price: ₹{p.price}</p>
-                                <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Quantity: {p.quantity}</p>
-                                <p style={{ marginBottom: '5px', color: '#666', fontSize:  '16px' }}>Total: ₹{p.price * p.quantity}</p>
+                                <h3 style={{ marginBottom: '10px', fontSize: x > 505 ? '20px' : "15px", fontWeight: 'bold' }}>{p.name}</h3>
+                                <p style={{ marginBottom: '5px', color: '#666', fontSize:  x > 505 ?  '16px' : "12px" }}>Price: ₹{p.price}</p>
+                                <p style={{ marginBottom: '5px', color: '#666', fontSize: x > 505 ? '16px': "12px" }}>Quantity: {p.quantity}</p>
+                                <p style={{ marginBottom: '5px', color: '#666', fontSize: x > 505 ?  '16px': "12px" }}>Total: ₹{p.price * p.quantity}</p>
                             </div>
                             <div style={styles.quantityContainer}>
                                 <button onClick={() => decreaseQuant(p.product, p.quantity)} style={styles.quantityButton}>-</button>

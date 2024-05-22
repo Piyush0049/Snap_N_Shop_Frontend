@@ -118,7 +118,7 @@ const Account = () => {
             marginBottom: '5px',
             color: '#555',
             zIndex: 2,
-            fontSize: x > 631 ? '35px' : "27px",
+            fontSize: x > 631 ? '35px' : "24px",
             textAlign: "center",
             fontWeight: "bold",
         },
@@ -186,7 +186,7 @@ const Account = () => {
                         changepassword && (
                             <>
                                 <div style={{ ...styles.detailItem, boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', padding: '20px', borderRadius: '10px' }}>
-                                    <h2 style={{ ...styles.label1 }}>Change Your Password</h2>
+                                    <h2 style={{ ...styles.label1 }}>Change Password</h2>
                                     <form onSubmit={handlepasswordUpdate} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         <label htmlFor="Old password" style={{ marginBottom: '10px', ...styles.label }}>Old Password </label>
 
@@ -292,7 +292,7 @@ const Account = () => {
                     }
                     {editopt ? (
                         <div style={{ ...styles.detailItem, boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', padding: '20px', borderRadius: '10px' }}>
-                            <h2 style={{ ...styles.label1 }}>Update Your Profile</h2>
+                            <h2 style={{ ...styles.label1 }}>Update Profile</h2>
                             <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                 <label htmlFor="userName" style={{ marginBottom: '10px', ...styles.label }}>User Name</label>
                                 <input
