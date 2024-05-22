@@ -82,7 +82,7 @@ function Allproducts() {
         <Fragment>
             <div style={pageStyle}>
                 <div style={{display : "flex", justifyContent : "center"}}>
-                <h3 style={{ fontFamily: "revert", position: "absolute", color: "black", textAlign: "center", fontSize:'60px' , marginTop: '80px' , whiteSpace: "nowrap"  }}><b>All Products</b></h3>
+                <h3 style={{ fontFamily: "revert", position: "absolute", color: "black", textAlign: "center", fontSize: x > 571 ? '60px' : "45px" , marginTop: '80px' , whiteSpace: "nowrap"  }}><b>All Products</b></h3>
                 </div>
                 
                 <hr style={{ position: "absolute", top: "140px", borderWidth: "2px", marginLeft: "300px", marginRight: "300px", zIndex: 2 }} />

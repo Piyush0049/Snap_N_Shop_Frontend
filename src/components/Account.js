@@ -188,7 +188,7 @@ const Account = () => {
                                 <div style={{ ...styles.detailItem, boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', padding: '20px', borderRadius: '10px' }}>
                                     <h2 style={{ ...styles.label1 }}>Change Your Password</h2>
                                     <form onSubmit={handlepasswordUpdate} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        <label htmlFor="Old password" style={{ marginBottom: '10px', ...styles.label }}>Old Password : </label>
+                                        <label htmlFor="Old password" style={{ marginBottom: '10px', ...styles.label }}>Old Password </label>
 
                                         <div style={{ display: "flex", marginLeft: "55px" }}>
                                             <input
@@ -216,7 +216,7 @@ const Account = () => {
                                         </div>
 
 
-                                        <label htmlFor="new password" style={{ marginBottom: '10px', ...styles.label }}>New Password : </label>
+                                        <label htmlFor="new password" style={{ marginBottom: '10px', ...styles.label }}>New Password</label>
                                         <div style={{ display: "flex", marginLeft: "55px" }}>
                                             <input
                                                 type={shownewPassword ? "password" : "text"}
@@ -243,7 +243,7 @@ const Account = () => {
                                             </IconButton>
                                         </div>
 
-                                        <label htmlFor="cpassword" style={{ marginBottom: '10px', ...styles.label }}>Confirm Password : </label>
+                                        <label htmlFor="cpassword" style={{ marginBottom: '10px', ...styles.label }}>Confirm Password</label>
 
                                         <div style={{ display: "flex", marginLeft: "55px" }}>
                                             <input

@@ -434,7 +434,7 @@ const Dashboard = () => {
                       style={{
                         cursor: "pointer",
                         textDecoration: "underline",
-                        fontSize: x > 475 ? '21px' : "18px",
+                        fontSize: x > 475 ? '21px' : "15px",
                         fontFamily: "monospace",
                         color: "gray",
                         transition: "color 0.3s ease",
@@ -452,7 +452,7 @@ const Dashboard = () => {
                       style={{
                         cursor: "pointer",
                         textDecoration: "underline",
-                        fontSize: x > 475 ? '21px' : "18px",
+                        fontSize: x > 475 ? '21px' : "15px",
                         fontFamily: "monospace",
                         color: "gray",
                         transition: "color 0.3s ease",
@@ -470,7 +470,7 @@ const Dashboard = () => {
                       style={{
                         cursor: "pointer",
                         textDecoration: "underline",
-                        fontSize: x > 475 ? '21px' : "18px",
+                        fontSize: x > 475 ? '21px' : "15px",
                         fontFamily: "monospace",
                         color: "gray",
                         transition: "color 0.3s ease",
