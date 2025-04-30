@@ -70,7 +70,7 @@ const Dashboard = () => {
       }
     }
     if (w === "admin") {
-      await axios.put("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/changerole", { email: e, work: "user" }, {
+      await axios.put("https://ecommerce-backend-ochre-two.vercel.app/auth/changerole", { email: e, work: "user" }, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -79,7 +79,7 @@ const Dashboard = () => {
       window.alert(`The role of the user with email : ${e} has been changed to ADMIN`);
     }
     if (w === "user") {
-      await axios.put("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/changerole", { email: e, work: "admin" }, {
+      await axios.put("https://ecommerce-backend-ochre-two.vercel.app/auth/changerole", { email: e, work: "admin" }, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -125,7 +125,7 @@ const Dashboard = () => {
 
   const deleteprod = async (id) => {
     if (window.confirm("Are you sure want to delete the product?")) {
-      await axios.delete(`https://snap-n-shop-fullmernstack-ecommerce.onrender.com/api/v1/product/${id}`, { withCredentials: true });
+      await axios.delete(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/product/${id}`, { withCredentials: true });
       window.alert('Product has been deleted successfully!');
     }
   }
@@ -158,7 +158,7 @@ const Dashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     window.alert('Product has been updated successfully!');
-    await axios.put(`https://snap-n-shop-fullmernstack-ecommerce.onrender.com/api/v1/product/${editedProduct[0]._id}`, {
+    await axios.put(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/product/${editedProduct[0]._id}`, {
       name: editedProduct[0].name, description: editedProduct[0].description, price: editedProduct[0].price, category: editedProduct[0].category, stock: editedProduct[0].stock, images: {
         public_id: "public",
         url: editimageurl
@@ -177,7 +177,7 @@ const Dashboard = () => {
     if (window.confirm("Do you really want to create a new product?")) {
       e.preventDefault();
       try {
-        await axios.post("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/api/v1/product/create", {
+        await axios.post("https://ecommerce-backend-ochre-two.vercel.app/api/v1/product/create", {
           name: newproduct.name,
           description: newproduct.description,
           price: newproduct.price,

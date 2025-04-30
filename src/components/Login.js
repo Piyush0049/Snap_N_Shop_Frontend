@@ -47,14 +47,22 @@ const LoginPage = () => {
         e.preventDefault();
         try {
             if (login === "login") {
+                console.log(email, password)
                 await dispatch(userlogin(email, password));
                 navigate("/")
             } else if (login === "signup") {
                 if (password === cpassword) {
-                    const myForm = new FormData();
-                    myForm.set("username", username);
-                    myForm.set("email", email);
-                    myForm.set("password", password);
+                    // const myForm = new FormData();
+                    // myForm.set("username", username);
+                    // myForm.set("email", email);
+                    // myForm.set("password", password);
+                    const myForm = {
+                        username: username,
+                        email: email,
+                        password: password,
+                    }
+                    console.log("username:", username, "email:", email, "password:", password);
+                    console.log(myForm)
                     await dispatch(usersignup(myForm));
                     navigate("/");
                 } else {

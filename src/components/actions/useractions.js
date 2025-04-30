@@ -4,7 +4,7 @@ import { USER_LOGIN_FAIL, USER_LOGIN_SUCCESS, USER_LOGIN_REQUEST, USER_SIGNUP_FA
 export const userlogin = (email, password) => async (dispatch) => {
     try {
         dispatch({ type: USER_LOGIN_REQUEST });
-        const { data } = await axios.post("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/login", { email, password }, {
+        const { data } = await axios.post("https://ecommerce-backend-ochre-two.vercel.app/auth/login", { email, password }, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -25,7 +25,7 @@ export const userlogin = (email, password) => async (dispatch) => {
 export const usersignup = (userdata) => async (dispatch) => {
     try {
         dispatch({ type: USER_SIGNUP_REQUEST });
-        const { data } = await axios.post("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/createuser", userdata, {
+        const { data } = await axios.post("https://ecommerce-backend-ochre-two.vercel.app/auth/createuser", userdata, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -46,7 +46,7 @@ export const usersignup = (userdata) => async (dispatch) => {
 export const userdataaccess = () => async (dispatch) => {
     try {
         dispatch({ type: USER_LOAD_REQUEST });
-        const { data } = await axios.get("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/me", { withCredentials: true});
+        const { data } = await axios.get("https://ecommerce-backend-ochre-two.vercel.app/auth/me", { withCredentials: true});
         dispatch({
             type: USER_LOAD_SUCCESS,
             payload: data
@@ -62,7 +62,7 @@ export const userdataaccess = () => async (dispatch) => {
 export const userlogout = () => async (dispatch) => {
     try {
         dispatch({ type: USER_LOGOUT_REQUEST });
-        const { data } = await axios.get("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/userlogout", { withCredentials: true});
+        const { data } = await axios.get("https://ecommerce-backend-ochre-two.vercel.app/auth/userlogout", { withCredentials: true});
         dispatch({
             type: USER_LOGOUT_SUCCESS,
             payload: data
@@ -78,7 +78,7 @@ export const userlogout = () => async (dispatch) => {
 export const updateuser = (username, email) => async (dispatch) => {
     try {
         dispatch({ type: USER_UPDATE_REQUEST });
-        const { data } = await axios.put("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/updateprofile", { username, email }, {
+        const { data } = await axios.put("https://ecommerce-backend-ochre-two.vercel.app/auth/updateprofile", { username, email }, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -100,7 +100,7 @@ export const updateuser = (username, email) => async (dispatch) => {
 export const updateuserpassword = (oldpassword, newpassword, confirmpassword) => async (dispatch) => {
     try {
         dispatch({ type: USER_UPDATEPASS_REQUEST });
-        const { data } = await axios.put("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/updatepassword", { oldpassword, newpassword, confirmpassword },{
+        const { data } = await axios.put("https://ecommerce-backend-ochre-two.vercel.app/auth/updatepassword", { oldpassword, newpassword, confirmpassword },{
             headers: {
               "Content-Type": "application/json",
             },
@@ -121,7 +121,7 @@ export const updateuserpassword = (oldpassword, newpassword, confirmpassword) =>
 export const deleteuser = () => async (dispatch) => {
     try {
         dispatch({ type: USER_DELETE_REQUEST });
-         await axios.delete("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/userdelete", { withCredentials: true});
+         await axios.delete("https://ecommerce-backend-ochre-two.vercel.app/auth/userdelete", { withCredentials: true});
         dispatch({
             type: USER_DELETE_SUCCESS,
         });
@@ -137,7 +137,7 @@ export const deleteuser = () => async (dispatch) => {
 export const forgotuserpassword = (email) => async (dispatch) => {
     try {
         dispatch({ type: USER_FORGOT_REQUEST });
-        const { data } = await axios.post("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/password/forgot", { email }, {
+        const { data } = await axios.post("https://ecommerce-backend-ochre-two.vercel.app/auth/password/forgot", { email }, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -159,7 +159,7 @@ export const forgotuserpassword = (email) => async (dispatch) => {
 export const forgotpasswordreset = (token, newpassword, confirmpassword) => async (dispatch) => {
     try {
         dispatch({ type: FORGOT_RESET_REQUEST });
-        const { data } = await axios.put(`https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/password/reset/${token}`, { newpassword, confirmpassword }, {
+        const { data } = await axios.put(`https://ecommerce-backend-ochre-two.vercel.app/auth/password/reset/${token}`, { newpassword, confirmpassword }, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -183,7 +183,7 @@ export const getallusers = () => async(dispatch) => {
         dispatch({
             type : ALL_USERS_REQUEST
         })
-        const {data} = await axios.get("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/auth/getalluserprofile", { withCredentials: true});
+        const {data} = await axios.get("https://ecommerce-backend-ochre-two.vercel.app/auth/getalluserprofile", { withCredentials: true});
         dispatch({
             type : ALL_USERS_SUCCESS,
             payload : data

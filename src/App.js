@@ -58,7 +58,7 @@ function App() {
 
   useEffect(() => {
     const getsapikey = async () => {
-      const { data } = await axios.get("https://snap-n-shop-fullmernstack-ecommerce.onrender.com/api/v1/stripeapikey", { withCredentials: true });
+      const { data } = await axios.get("https://ecommerce-backend-ochre-two.vercel.app/api/v1/stripeapikey", { withCredentials: true });
       setstripeapikey(data.stripeapikey);
     }
     getsapikey();
