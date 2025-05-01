@@ -18,7 +18,6 @@ const reducer = combineReducers({
     allorders: allordersreducer,
 });
 
-// Define the initial state
 let initstate = {
     cart: {
         cartitems: localStorage.getItem("cartitem") 
@@ -32,15 +31,12 @@ let initstate = {
     },
 };
 
-// Define middleware
 const middleware = [thunk];
 
-// Set up the Redux DevTools extension if it's available
 const composeEnhancers = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ 
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ 
     : compose;
 
-// Create the Redux store with middleware and DevTools integration
 const store = createStore(
     reducer,
     initstate,
