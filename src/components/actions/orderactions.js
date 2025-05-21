@@ -16,6 +16,7 @@ export const createorder = (order) => async (dispatch, getState) => {
         const state = getState();
         localStorage.setItem("myorder", JSON.stringify(state.myorders.orderdet));
     } catch (error) {
+        console.log(error);
         dispatch({
             type: USER_ORDER_FAIL,
             payload: error.response.data.message
