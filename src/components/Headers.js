@@ -52,10 +52,13 @@ function Headers() {
           {/* Logo */}
           <Link
             to="/"
-            className="text-2xl font-extrabold tracking-wide text-sky-800 hover:opacity-80"
+            className="text-2xl font-extrabold tracking-wide text-sky-800 hover:opacity-80 flex items-center"
           >
             Snap & Shop
+            <sup className="ml-1 text-base font-extrabold text-teal-600 animate-pulse">2.0</sup>
           </Link>
+
+
 
           {/* Desktop Nav */}
           <ul className="hidden lg:flex items-center space-x-8 font-medium text-sky-700">
