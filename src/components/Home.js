@@ -80,7 +80,7 @@ function Home() {
           transition={{ duration: 0.7 }}
         >
           <h1
-            className="font-extrabold text-slate-900 drop-shadow-lg tracking-tight"
+            className=" text-slate-900 drop-shadow-lg tracking-tight"
             style={{
               fontFamily: "fantasy",
               fontSize: screenWidth > 536 ? "3.8rem" : "2.6rem",
@@ -90,7 +90,7 @@ function Home() {
             SNAP & SHOP!
           </h1>
           <h2
-            className="mt-6 font-extrabold text-sky-700 tracking-wide"
+            className="mt-6 text-sky-700 tracking-wide"
             style={{
               fontFamily: "fantasy",
               fontSize: screenWidth > 536 ? "2.4rem" : "1.5rem",
@@ -103,9 +103,9 @@ function Home() {
           </p>
           <Link
             to="/products"
-            className="inline-block mt-8 px-12 py-3 bg-gradient-to-r from-sky-500 to-cyan-400 shadow-xl text-white font-bold text-lg rounded-full hover:from-sky-600 hover:to-cyan-600 transform hover:scale-110 transition-all duration-200"
+            className="inline-block mt-8 px-8 py-2 bg-gradient-to-r from-sky-500 to-cyan-400 shadow-xl text-white font-bold text-base rounded-full hover:from-sky-600 hover:to-cyan-600 transform hover:scale-110 transition-all duration-200"
           >
-            Shop All Products
+            Shop Now
           </Link>
         </motion.div>
 

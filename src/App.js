@@ -23,10 +23,8 @@ function App() {
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-teal-100">
-        {/* Loader animation */}
         <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin mb-6"></div>
 
-        {/* Loader text */}
         <h2 className="text-2xl font-semibold text-gray-700 tracking-wide">
           Loading...
         </h2>
