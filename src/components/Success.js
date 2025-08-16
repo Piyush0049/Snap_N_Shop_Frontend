@@ -22,7 +22,7 @@ const Success = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-sky-100 flex flex-col items-center py-24 px-4">
+    <div className="min-h-screen bg-white flex flex-col items-center py-24 px-4">
       {/* Step Tracker */}
       <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
         <Link to="/mycart" className="flex items-center gap-2 text-green-600">
@@ -45,7 +45,7 @@ const Success = () => {
         <img
           src="/success.gif"
           alt="Payment success animation"
-          className={`mb-12 ${screenWidth > 800 ? "w-auto max-w-md" : "w-full"}`}
+          className={` ${screenWidth > 800 ? "w-auto max-w-md" : "w-full"}`}
           loading="lazy"
         />
         <h2 className="text-3xl font-bold text-sky-900 mb-6">
