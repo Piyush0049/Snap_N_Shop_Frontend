@@ -1,255 +1,205 @@
-import React, { useState, useEffect } from 'react';
-import Select from 'react-select';
-import { Country, State, City } from 'country-state-city';
-import backimage from "./snapedit_1710779459498.jpeg";
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import { Country, State, City } from "country-state-city";
+import { useNavigate, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const LocationSelector = () => {
-  const [x, setx] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setx(window.innerWidth);
-
-    window.addEventListener('resize', handleResize);
-
-    if (localStorage.getItem("width") !== null) {
-      setx(parseInt(localStorage.getItem("width")));
-    } else {
-      setx(window.innerWidth);
-    }
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
 
-  // Initialize shippingdet as null
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    setScreenWidth(
+      localStorage.getItem("width")
+        ? parseInt(localStorage.getItem("width"))
+        : window.innerWidth
+    );
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Load existing shipping details from localStorage
   let shippingdet = null;
-
-  // Retrieve shippingdetails from localStorage
-  const a = localStorage.getItem("shippingdetails");
-
-  // Parse shippingdetails if it's a valid JSON string
-  if (a && a !== "null") {
+  const savedShipping = localStorage.getItem("shippingdetails");
+  if (savedShipping && savedShipping !== "null") {
     try {
-      shippingdet = JSON.parse(a);
-    } catch (error) {
-      console.error("Error parsing shipping details:", error);
+      shippingdet = JSON.parse(savedShipping);
+    } catch (err) {
+      console.error("Error parsing shipping details", err);
     }
   }
 
-  // Set state variables with default values or values from shippingdet
-  const [selectedCountry, setSelectedCountry] = useState(shippingdet ? shippingdet.selectedCountry : null);
-  const [selectedState, setSelectedState] = useState(shippingdet ? shippingdet.selectedState : null);
-  const [selectedCity, setSelectedCity] = useState(shippingdet ? shippingdet.selectedCity : null);
+  // State variables
+  const [selectedCountry, setSelectedCountry] = useState(
+    shippingdet ? shippingdet.selectedCountry : null
+  );
+  const [selectedState, setSelectedState] = useState(
+    shippingdet ? shippingdet.selectedState : null
+  );
+  const [selectedCity, setSelectedCity] = useState(
+    shippingdet ? shippingdet.selectedCity : null
+  );
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
+  const user = useSelector(state => state.userdetails.user);
+
   const [userDetails, setUserDetails] = useState({
-    name: shippingdet ? shippingdet.userDetails.name : "",
-    email: shippingdet ? shippingdet.userDetails.email : "",
-    address: shippingdet ? shippingdet.userDetails.address : "",
-    phone: shippingdet ? shippingdet.userDetails.phone : "",
+    name: user ? user.username : "",
+    email: user ? user.email : "",
+    address: shippingdet ? shippingdet.address : "",
+    phone: shippingdet ? shippingdet.phone : "",
   });
 
-  // Scroll to the top when the component mounts
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  // Fetch all countries and set them in state
+  // Load all countries
   useEffect(() => {
     const allCountries = Country.getAllCountries();
-    const countryOptions = allCountries.map(country => ({
-      value: country.isoCode,
-      label: country.name,
-      phonecode: country.phonecode
+    const options = allCountries.map((c) => ({
+      value: c.isoCode,
+      label: c.name,
+      phonecode: c.phonecode,
     }));
-    setCountries(countryOptions);
+    setCountries(options);
   }, []);
 
-  // Handle country change
-  const handleCountryChange = selectedOption => {
-    setSelectedCountry(selectedOption);
-
-    // Fetch states of the selected country
-    const countryStates = State.getStatesOfCountry(selectedOption.value);
-    const stateOptions = countryStates.map(state => ({
-      value: state.isoCode,
-      label: state.name
-    }));
-    setStates(stateOptions);
-
-    // Reset selected state and city
+  // Country change handler
+  const handleCountryChange = (country) => {
+    setSelectedCountry(country);
+    const countryStates = State.getStatesOfCountry(country.value);
+    setStates(
+      countryStates.map((s) => ({
+        value: s.isoCode,
+        label: s.name,
+      }))
+    );
     setSelectedState(null);
     setSelectedCity(null);
   };
 
-  // Handle state change
-  const handleStateChange = selectedOption => {
-    setSelectedState(selectedOption);
-
-    // Fetch cities of the selected state
-    const stateCities = City.getCitiesOfState(selectedCountry.value, selectedOption.value);
-    const cityOptions = stateCities.map(city => ({
-      value: city,
-      label: city.name
-    }));
-    setCities(cityOptions);
-
-    // Reset selected city
+  // State change handler
+  const handleStateChange = (state) => {
+    setSelectedState(state);
+    const stateCities = City.getCitiesOfState(selectedCountry.value, state.value);
+    setCities(stateCities.map((c) => ({ value: c, label: c.name })));
     setSelectedCity(null);
   };
 
-  // Handle city change
-  const handleCityChange = selectedOption => {
-    setSelectedCity(selectedOption);
+  const handleCityChange = (city) => {
+    setSelectedCity(city);
   };
 
-  // Handle input change for user details
-  const handleInputChange = e => {
-    setUserDetails({
-      ...userDetails,
-      [e.target.name]: e.target.value,
-    });
+  const handleInputChange = (e) => {
+    setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   };
 
-  // Style object for inline styling
-  const styles = {
-    hr2: {
-      borderWidth: "2px",
-      opacity: 0.6,
-      width: "300px",
-    },
-    container: {
-      maxWidth: "80%",
-      maxHeight: '2000px',
-      height: "auto",
-      width: "auto",
-      margin: 'auto',
-      padding: '20px',
-      border: '1px solid #ccc',
-      borderRadius: '5px',
-      boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-      backgroundColor: 'rgba(255, 255, 255, 0.6)',
-      position: "relative",
-      top: "1px",
-    },
-    userDetailsContainer: {
-      marginTop: '20px',
-      padding: '20px',
-      borderRadius: '5px',
-      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
-      backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    },
-    label: {
-      marginBottom: '5px',
-      fontSize: "19px",
-    },
-    input: {
-      marginBottom: '10px',
-      width: '100%',
-      padding: '8px',
-      border: '1px solid #ccc',
-      borderRadius: '5px',
-      boxSizing: 'border-box',
-    },
-    selectContainer: {
-      marginBottom: '20px',
-
-    },
-    proceedButton: {
-      marginTop: '30px',
-      padding: '15px 30px',
-      fontSize: "18px",
-      backgroundColor: '#007bff',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      transition: 'background-color 0.3s ease',
-      outline: 'none',
-
-    },
-  };
-
-  const shippingdetails = { userDetails, selectedCity, selectedState, selectedCountry };
-
-  // Handle proceed to checkout
   const handleProceedToCheckout = () => {
-    localStorage.setItem('shippingdetails', JSON.stringify(shippingdetails));
+    const shippingdetails = { userDetails, selectedCity, selectedState, selectedCountry };
+    localStorage.setItem("shippingdetails", JSON.stringify(shippingdetails));
     navigate("/confirmorder");
-  }
+  };
+
+  const isFormComplete =
+    selectedCountry &&
+    selectedState &&
+    selectedCity &&
+    userDetails.name &&
+    userDetails.phone &&
+    userDetails.email &&
+    userDetails.address;
 
   return (
-    <div style={{
-      backgroundImage: `url(${backimage})`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight: '1000px', // Adjusted height based on window width
-      width: "100%",
-      height: "auto",
-      paddingTop: "90px"
-    }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Link to="/mycart" style={{ fontSize: x > 1090 ? '25px' : "16px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
-        <hr style={styles.hr2} />
-        <Link style={{ fontSize: x > 1090 ? '25px' : "16px", color: "red", textDecoration: "none", whiteSpace: "nowrap" }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
-        <hr style={styles.hr2} />
-        <Link style={{ fontSize: x > 1090 ? '25px' : "16px", color: "red", textDecoration: "none", whiteSpace: "nowrap" }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
+    <div className="bg-sky-100 min-h-screen py-24 md:py-20 px-4">
+      {/* Step Tracker */}
+      <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
+        <Link to="/mycart" className="flex items-center gap-2 text-green-600">
+          <i className="fa-solid fa-cart-shopping"></i>
+          <span className="hidden md:inline">View Cart</span>
+        </Link>
+        <span className=" w-20 h-0.5 bg-gray-400"></span>
+        <span className="flex items-center gap-2">
+          <i className="fa-solid fa-check"></i>
+          <span className="hidden md:inline">Fill Details</span>
+        </span>
+        <span className=" w-20 h-0.5 bg-gray-400"></span>
+        <span className="flex items-center gap-2 opacity-40">
+          <i className="fa-solid fa-circle-check"></i>
+          <span className="hidden md:inline">Payment</span>
+        </span>
       </div>
 
-      <div style={styles.container}>
-        <h2 style={{ marginBottom: "35px", textAlign: "center" }}><b>Add Shipping Details : </b></h2>
-        <div style={styles.selectContainer}>
-          <label style={styles.label}>Name:</label>
+      {/* Form Container */}
+      <div className="bg-white bg-opacity-90 shadow-xl rounded-xl max-w-3xl mx-auto p-8">
+        <h2 className="text-2xl font-bold text-center mb-8 text-sky-900">
+          Add Shipping Details
+        </h2>
+
+        {/* Name */}
+        <div className="mb-4">
+          <label className="block font-medium mb-1">Name:</label>
           <input
             type="text"
             name="name"
             value={userDetails.name}
+            readOnly
             onChange={handleInputChange}
-            style={styles.input}
-          />
-        </div>
-        <div style={styles.selectContainer}>
-          <label style={styles.label}>Phone:</label>
-          <input
-            type="Number"
-            name="phone"
-            value={userDetails.phone}
-            onChange={handleInputChange}
-            style={styles.input}
+            className="w-full p-3 rounded-lg border bg-gray-100 text-gray-500 border-gray-300 focus:ring focus:ring-sky-300 outline-none"
           />
         </div>
 
-        <div style={styles.selectContainer}>
-          <label style={styles.label}>Email:</label>
+        {/* Phone */}
+        <div className="mb-4">
+          <label className="block font-medium mb-1">Phone:</label>
+          <input
+            type="number"
+            name="phone"
+            value={userDetails.phone}
+            onChange={handleInputChange}
+            className="w-full p-3 rounded-lg border border-gray-300 focus:ring focus:ring-sky-300 outline-none"
+          />
+        </div>
+
+        {/* Email */}
+        <div className="mb-4">
+          <label className="block font-medium mb-1">Email:</label>
           <input
             type="email"
             name="email"
             value={userDetails.email}
+            readOnly
             onChange={handleInputChange}
-            style={styles.input}
+            className="w-full p-3 rounded-lg border bg-gray-100  text-gray-500 border-gray-300 focus:ring focus:ring-sky-300 outline-none"
           />
         </div>
-        <div style={styles.selectContainer}>
-          <label style={styles.label}>Address:</label>
+
+        {/* Address */}
+        <div className="mb-4">
+          <label className="block font-medium mb-1">Address:</label>
           <input
             type="text"
             name="address"
             value={userDetails.address}
             onChange={handleInputChange}
-            style={styles.input}
+            maxLength={30}
+            className="w-full p-3 rounded-lg border border-gray-300 focus:ring focus:ring-sky-300 outline-none"
           />
+
         </div>
-        <div style={styles.selectContainer}>
-          <label style={styles.label}>Country:</label>
+
+        {/* Country */}
+        <div className="mb-4">
+          <label className="block font-medium mb-1">Country:</label>
           <Select
             value={selectedCountry}
             onChange={handleCountryChange}
             options={countries}
           />
         </div>
+
+        {/* State */}
         {selectedCountry && (
-          <div style={styles.selectContainer}>
-            <label style={styles.label}>State:</label>
+          <div className="mb-4">
+            <label className="block font-medium mb-1">State:</label>
             <Select
               value={selectedState}
               onChange={handleStateChange}
@@ -258,9 +208,11 @@ const LocationSelector = () => {
             />
           </div>
         )}
+
+        {/* City */}
         {selectedState && (
-          <div style={styles.selectContainer}>
-            <label style={styles.label}>City:</label>
+          <div className="mb-4">
+            <label className="block font-medium mb-1">City:</label>
             <Select
               value={selectedCity}
               onChange={handleCityChange}
@@ -269,10 +221,19 @@ const LocationSelector = () => {
             />
           </div>
         )}
-        {selectedCountry && selectedState && selectedCity && userDetails.name && userDetails.phone && userDetails.address && userDetails.email && (
-          <div style={{ textAlign: 'center' }}>
-            <h5 style={{ fontFamily: "revert", marginTop: "20px" }}><b>Please check the details before submitting.</b></h5>
-            <button style={styles.proceedButton} onClick={handleProceedToCheckout}>Proceed To Checkout</button>
+
+        {/* Proceed Button */}
+        {isFormComplete && (
+          <div className="text-center mt-6">
+            <h5 className="font-semibold mb-4">
+              Please check the details before submitting.
+            </h5>
+            <button
+              onClick={handleProceedToCheckout}
+              className="bg-sky-600 hover:bg-sky-700 text-white px-8 py-3 rounded-lg font-semibold shadow-md transition-colors"
+            >
+              Proceed To Checkout
+            </button>
           </div>
         )}
       </div>

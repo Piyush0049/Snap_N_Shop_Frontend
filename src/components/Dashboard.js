@@ -1,31 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getallorders, updatestatus } from "./actions/orderactions"
-import { getallusers } from './actions/useractions';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getallorders, updatestatus } from "../actions/orderactions";
+import { getallusers } from "../actions/useractions";
+import axios from "axios";
+import { allproducts } from "../actions/productActions";
+import toast from "react-hot-toast";
+
 const Dashboard = () => {
   const [x, setx] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setx(window.innerWidth);
-
-    window.addEventListener('resize', handleResize);
-
-    if (localStorage.getItem("width") !== null) {
-      setx(parseInt(localStorage.getItem("width")));
-    } else {
-      setx(window.innerWidth);
-    }
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
   const dispatch = useDispatch();
-  const { orderdets } = useSelector((state) => state.allorders)
+
+  const { orderdets } = useSelector((state) => state.allorders);
   const { work } = useSelector((state) => state.userdetails.user);
-  const [opt, setopt] = useState("");
-  const [selectedorder, setselectedorder] = useState("");
-  const [theproduct, settheproduct] = useState("");
   const { user } = useSelector((state) => state.userdetails);
+  const { allUsers } = useSelector((state) => state.AllUsers);
+  const { allProducts } = useSelector((state) => state.products);
+
+  const [opt, setopt] = useState("");
+  const [selectedorder, setselectedorder] = useState(null); // single order object
+  const [theproduct, settheproduct] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [editedProduct, setEditedProduct] = useState(null);
+  const [editimageurl, seteditimageurl] = useState("");
   const [newproduct, setnewproduct] = useState({
     name: "",
     description: "",
@@ -34,712 +30,629 @@ const Dashboard = () => {
     stock: "",
     images: {
       public_id: "public",
-      url: ""
+      url: "",
+    },
+  });
+
+  useEffect(() => {
+    const handleResize = () => setx(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    if (localStorage.getItem("width") !== null) {
+      setx(parseInt(localStorage.getItem("width")));
+    } else {
+      setx(window.innerWidth);
     }
-  })
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Fetch data initially and on refresh after operations
+  const fetchAllData = () => {
+    dispatch(allproducts());
+    dispatch(getallorders());
+    dispatch(getallusers());
+  };
+
   useEffect(() => {
-    dispatch(getallorders())
+    fetchAllData();
   }, [dispatch]);
 
-
-  useEffect(() => {
-    dispatch(getallusers())
-  }, [dispatch]);
-
-  const [selectedStatus, setSelectedStatus] = useState("");
   const handleSelectChange = (event) => {
-    const selectedValue = event.target.value;
-    setSelectedStatus(selectedValue);
-  }
-  const update = () => {
-    dispatch(updatestatus(selectedorder[0]._id, selectedStatus))
-  }
+    setSelectedStatus(event.target.value);
+  };
 
-  const { allUsers } = useSelector((state) => state.AllUsers);
+  const update = async () => {
+    if (!selectedorder) return;
+    await dispatch(updatestatus(selectedorder._id, selectedStatus));
+    setopt("orders");
+    fetchAllData(); // Re-fetch after update
+  };
+
   const changeroles = async (w, e) => {
     if (w === "admin") {
-      const confirmed = window.confirm(`Are you sure you want to change the user's role to USER?`);
-      if (!confirmed) {
+      if (!window.confirm("Are you sure you want to change the user's role to USER?"))
         return;
-      }
     }
     if (w === "user") {
-      const confirmed = window.confirm(`Are you sure you want to change the user's role to ADMIN?`);
-      if (!confirmed) {
+      if (!window.confirm("Are you sure you want to change the user's role to ADMIN?"))
         return;
-      }
     }
     if (w === "admin") {
-      await axios.put("https://ecommerce-backend-ochre-two.vercel.app/auth/changerole", { email: e, work: "user" }, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
-      window.alert(`The role of the user with email : ${e} has been changed to ADMIN`);
+      await axios.put(
+        "http://localhost:4000/auth/changerole",
+        { email: e, work: "user" },
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+      );
+      toast.success(`The role of the user with email : ${e} has been changed to USER`);
     }
     if (w === "user") {
-      await axios.put("https://ecommerce-backend-ochre-two.vercel.app/auth/changerole", { email: e, work: "admin" }, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
-      window.alert(`The role of the user with email : ${e} has been changed to ADMIN.`);
+      await axios.put(
+        "http://localhost:4000/auth/changerole",
+        { email: e, work: "admin" },
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+      );
+      toast.success(`The role of the user with email : ${e} has been changed to ADMIN`);
     }
-
+    fetchAllData(); // Re-fetch after role change
   };
-  const { allProducts } = useSelector((state) => state.products)
-  const thepro = () => {
-    if (theproduct !== "") {
-      setopt("theproduct")
-      setEditedProduct(theproduct)
-      seteditimageurl(theproduct[0].images[0].url)
-    }
-  }
-  const [editedProduct, setEditedProduct] = useState(null);
-  const [editimageurl, seteditimageurl] = useState(editedProduct !== null ? editedProduct[0].images[0].url : "");
 
+  const thepro = () => {
+    if (theproduct && theproduct.length > 0) {
+      setopt("theproduct");
+      setEditedProduct(theproduct[0]);
+      seteditimageurl(theproduct[0].images[0].url);
+    }
+  };
 
   const handleeditimage = (e) => {
     seteditimageurl(e.target.value);
-
   };
 
-
-  const handleChange = (index, key, value) => {
-    setEditedProduct(prevData => {
-      // If prevData is null or not an array, return an empty array
-      if (!Array.isArray(prevData)) {
-        return [];
-      }
-      // Create a copy of the array
-      const newData = [...prevData];
-      // Update the value of the specific key in the object at the given index
-      if (newData[index]) {
-        newData[index][key] = value;
-      }
-      return newData;
-    });
-  }
+  const handleChange = (key, value) => {
+    setEditedProduct((prevData) => ({
+      ...prevData,
+      [key]: value,
+    }));
+  };
 
   const deleteprod = async (id) => {
     if (window.confirm("Are you sure want to delete the product?")) {
-      await axios.delete(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/product/${id}`, { withCredentials: true });
-      window.alert('Product has been deleted successfully!');
+      await axios.delete(`http://localhost:4000/api/v1/prod/product/${id}`, {
+        withCredentials: true,
+      });
+      toast.success("Product has been deleted successfully!");
+      fetchAllData(); // Re-fetch after deletion
+      setopt("products");
     }
-  }
+  };
 
   const handleChangenewprod = (e) => {
     const { name, value } = e.target;
     setnewproduct({
       ...newproduct,
-      [name]: value
+      [name]: value,
     });
   };
 
   const handleChangenewprodimage = (e) => {
-    const { name, description, price, category, stock, images } = newproduct;
-
-    // Update the images object with the new URL
-    const updatedImages = { ...images, url: e.target.value };
-
-    // Update the newproduct state with the new images object
+    const updatedImages = { ...newproduct.images, url: e.target.value };
     setnewproduct({
-      name,
-      description,
-      price,
-      category,
-      stock,
+      ...newproduct,
       images: updatedImages,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    window.alert('Product has been updated successfully!');
-    await axios.put(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/product/${editedProduct[0]._id}`, {
-      name: editedProduct[0].name, description: editedProduct[0].description, price: editedProduct[0].price, category: editedProduct[0].category, stock: editedProduct[0].stock, images: {
-        public_id: "public",
-        url: editimageurl
-      }
-    }, {
-      headers: {
-        "Content-Type": "application/json",
+    if (!editedProduct) return;
+    toast.success("Product has been updated successfully!");
+    await axios.put(
+      `http://localhost:4000/api/v1/prod/product/${editedProduct._id}`,
+      {
+        name: editedProduct.name,
+        description: editedProduct.description,
+        price: editedProduct.price,
+        category: editedProduct.category,
+        stock: editedProduct.stock,
+        images: { public_id: "public", url: editimageurl },
       },
-      withCredentials: true,
-    },);
+      { headers: { "Content-Type": "application/json" }, withCredentials: true }
+    );
     setopt("products");
     settheproduct("");
+    fetchAllData(); // Re-fetch after update
   };
 
   const handlecreatenewprod = async (e) => {
     if (window.confirm("Do you really want to create a new product?")) {
       e.preventDefault();
       try {
-        await axios.post("https://ecommerce-backend-ochre-two.vercel.app/api/v1/product/create", {
-          name: newproduct.name,
-          description: newproduct.description,
-          price: newproduct.price,
-          category: newproduct.category,
-          stock: newproduct.stock,
-          images: {
-            public_id: newproduct.images.public_id,
-            url: newproduct.images.url
-          }
-        }, {
-          headers: {
-            "Content-Type": "application/json",
+        await axios.post(
+          "http://localhost:4000/api/v1/prod/product/create",
+          {
+            name: newproduct.name,
+            description: newproduct.description,
+            price: newproduct.price,
+            category: newproduct.category,
+            stock: newproduct.stock,
+            images: {
+              public_id: newproduct.images.public_id,
+              url: newproduct.images.url,
+            },
           },
-          withCredentials: true,
-        });
+          { headers: { "Content-Type": "application/json" }, withCredentials: true }
+        );
+        setopt("products");
+        fetchAllData(); // Re-fetch after create
       } catch (error) {
         console.error("Error creating new product:", error);
       }
     }
   };
 
-  const styles = {
-    grandTotalContainer: {
-      marginTop: '40px',
-      display: 'flex',
-      justifyContent: 'space-between',
-      fontWeight: 'bold',
-      width: "300px",
-    },
-    grandTotalContainer3: {
-      marginTop: '40px',
-      display: 'flex',
-      justifyContent: 'space-between',
-      fontWeight: 'bold',
-      width: "300px",
-      position: "relative",
-      left: "750px"
-    },
-    grandTotalContainer2: {
-      marginTop: '18px',
-      display: 'flex',
-      justifyContent: 'space-between',
-      fontWeight: 'bold',
-      width: "300px",
-      whiteSpace: "nowrap"
-    },
-    hr2: {
-      borderWidth: "2px",
-      opacity: 0.6,
-      width: "300px",
-    },
-    cartContainer: {
-      maxWidth: '900px',
-      width: '100%',
-      padding: '30px',
-      borderRadius: '20px',
-      background: 'rgba(255, 255, 255, 0.9)',
-      boxShadow: '0px 20px 20px rgba(0, 0, 0, 0.1)',
-    },
-    product: {
-      marginBottom: '30px',
-      padding: '20px',
-      borderRadius: '10px',
-      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      overflowY: "auto"
-    },
-    image: {
-      width: '120px',
-      height: '120px',
-      borderRadius: '10px',
-      marginRight: '20px',
-    },
-    details: {
-      flex: '1',
-    },
-    quantityContainer: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    quantityButton: {
-      backgroundColor: '#5ABCE6',
-      color: '#fff',
-      padding: '5px',
-      borderRadius: '5px',
-      border: 'none',
-      fontSize: '20px',
-      cursor: 'pointer',
-      transition: 'background-color 0.3s',
-      marginRight: '5px',
-      boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
-      width: "21px",
-    },
-    quantityButton2: {
-      backgroundColor: 'gray',
-      color: '#fff',
-      padding: '5px',
-      borderRadius: '5px',
-      border: 'none',
-      fontSize: '20px',
-      transition: 'background-color 0.3s',
-      marginRight: '5px',
-      boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
-      width: "21px",
-    },
-    quantityText: {
-      fontSize: '20px',
-      color: '#333',
-      margin: '0 5px',
-      marginRight: "10px"
-    },
-    checkoutButton: {
-      marginTop: '30px',
-      padding: '15px 30px',
-      fontSize: '16px',
-      backgroundColor: '#007bff',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      transition: 'background-color 0.3s ease',
-      outline: 'none',
-    },
-    grandTotal: {
-      marginTop: '30px',
-      fontSize: '24px',
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-
-  };
-
-  const style = {
-    editProductContainer: {
-      position: "relative",
-      top: "80px",
-      opacity: "0.9",
-      backgroundColor: "#D2F1FE",
-      height: '600px',
-      alignItems: "center",
-      justifyContent: "center",
-      overflowY: "auto",
-    },
-    editProductHeader: {
-      position: "relative",
-      top: "20px",
-      left: "30px",
-      fontSize: '35px',
-      fontWeight: "bold",
-      textAlign: "center",
-      paddingBottom: "25px"
-    },
-    product: {
-      display: "flex",
-      margin: "20px",
-      justifyContent: "center"
-
-    },
-    image: {
-      width:  "auto",
-      maxWidth : x > 603 ? "600px" : "400px",
-      height : "auto",
-      maxHeight: x > 603 ? "600px" : "400px",
-      marginRight: "20px",
-      borderRadius: "10px",
-    },
-    details: {
-      display: "flex",
-      flexDirection: "column",
-      textAlign: "center"
-    },
-    label: {
-      marginTop: "20px",
-      color: "#666",
-      fontSize: '21px',
-      textAlign: "center"
-    },
-    input: {
-      marginBottom: "10px",
-      padding: "10px 120px",
-      fontSize: '16px',
-      borderRadius: "10px",
-      border: "2px solid #ccc",
-      textAlign: "center"
-    },
-    textarea: {
-      marginBottom: "10px",
-      padding: "8px",
-      fontSize: "16px",
-      borderRadius: "5px",
-      border: "1px solid #ccc",
-      minHeight: "50px",
-      textAlign: "center"
-    },
-    disabledInput: {
-      marginBottom: "10px",
-      padding: "8px",
-      fontSize: '16px',
-      borderRadius: "5px",
-      border: "1px solid #ccc",
-      backgroundColor: "#f3f3f3",
-      color: "#666",
-      textAlign: "center"
-    },
-    button: {
-      marginTop: "20px",
-      padding: "15px 20px",
-      fontSize: '16px',
-      backgroundColor: "#28a745",
-      color: "#fff",
-      border: "none",
-      borderRadius: "5px",
-      cursor: "pointer",
-      transition: "background-color 0.3s",
-      boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-    },
-  };
-
-
-  // Inline CSS Styles
-  const dashboardStyle = {
-    fontFamily: 'Arial, sans-serif',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '20px',
-    width: '100%',
-    height: '100% auto',
-  };
-
-
-  const navStyle = {
-    width: "100%",
-    position: "relative",
-    top: "50px"
-  }
   return (
-    <div>
+    <div className="bg-gray-50 min-h-screen">
       {work === "admin" ? (
-        <div style={{
-          backgroundColor: "#ACE7FF", minHeight: '1000px', // Adjusted height based on window width
-          minWidth: "100%",
-          height: "auto",
-          width: "auto",
-        }}>
-          <div style={dashboardStyle}>
-            <header>
-              <h1 style={{ position: "relative", top: '50px', fontFamily: "monospace", textDecoration: "underline", whiteSpace: 'nowrap' }}><b>Admin Dashboard: </b></h1>
-              <nav style={navStyle}>
-                <ul style={{ display: "flex", textDecoration: "none", listStyle: 'none', marginTop: '15px', marginBottom: "15px", justifyContent: "space-around" }}>
-                  <li>
-                    <span
-                      style={{
-                        cursor: "pointer",
-                        textDecoration: "underline",
-                        fontSize: x > 475 ? '21px' : "15px",
-                        fontFamily: "monospace",
-                        color: "gray",
-                        transition: "color 0.3s ease",
-                        whiteSpace: 'nowrap'
-                      }}
-                      onMouseEnter={(e) => e.target.style.color = 'black'}
-                      onMouseLeave={(e) => e.target.style.color = 'gray'}
-                      onClick={() => { setopt("orders") }}
-                    >
-                      All Orders
-                    </span>
-                  </li>
-                  <li>
-                    <span
-                      style={{
-                        cursor: "pointer",
-                        textDecoration: "underline",
-                        fontSize: x > 475 ? '21px' : "15px",
-                        fontFamily: "monospace",
-                        color: "gray",
-                        transition: "color 0.3s ease",
-                        whiteSpace: 'nowrap'
-                      }}
-                      onMouseEnter={(e) => e.target.style.color = 'black'}
-                      onMouseLeave={(e) => e.target.style.color = 'gray'}
-                      onClick={() => { setopt("products") }}
-                    >
-                      All Products
-                    </span>
-                  </li>
-                  <li>
-                    <span
-                      style={{
-                        cursor: "pointer",
-                        textDecoration: "underline",
-                        fontSize: x > 475 ? '21px' : "15px",
-                        fontFamily: "monospace",
-                        color: "gray",
-                        transition: "color 0.3s ease",
-                        whiteSpace: 'nowrap'
-                      }}
-                      onMouseEnter={(e) => e.target.style.color = 'black'}
-                      onMouseLeave={(e) => e.target.style.color = 'gray'}
-                      onClick={() => { setopt("customers") }}
-                    >
-                      All Users
-                    </span>
-                  </li>
-                </ul>
-              </nav>
-            </header>
-            {
-              opt === "" &&
-              <div style={{ position: "relative", top: "80px", opacity: "0.9", backgroundColor: "#D2F1FE", height: "700px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <h1 style={{ fontFamily: "revert-layer", fontSize: x > 536 ? '50px' : "35px" }}><b>Welcome, ADMIN!</b></h1>
-              </div>
-            }
-            {
-              opt === "orders" && orderdets.length > 0 &&
+        <div className="max-w-7xl mx-auto p-24">
+          <header className="mb-10">
+            <nav>
+              <ul className="flex justify-center space-x-12 text-lg font-mono text-gray-600">
+                <li>
+                  <button
+                    className={`hover:text-gray-900 focus:text-gray-900 transition font-semibold ${
+                      opt === "orders" ? "text-gray-900 underline" : ""
+                    }`}
+                    onClick={() => setopt("orders")}
+                  >
+                    Orders
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className={`hover:text-gray-900 focus:text-gray-900 transition font-semibold ${
+                      opt === "products" ? "text-gray-900 underline" : ""
+                    }`}
+                    onClick={() => setopt("products")}
+                  >
+                    Products
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className={`hover:text-gray-900 focus:text-gray-900 transition font-semibold ${
+                      opt === "customers" ? "text-gray-900 underline" : ""
+                    }`}
+                    onClick={() => setopt("customers")}
+                  >
+                    Users
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </header>
 
-              <div style={{ position: "relative", top: "80px", opacity: "0.9", backgroundColor: "#D2F1FE", height: '600px', alignItems: "center", justifyContent: "center", overflowY: "auto" }}>
-                {orderdets.map((order, index) => (
-                  <div key={index} style={styles.product} onClick={() => { setselectedorder(orderdets.filter(ord => ord._id === order._id)); setopt("theorder") }}>
-                    <div style={styles.details}>
-                      <h3 style={{ marginBottom: '10px', fontSize: '17px', fontWeight: 'bold' }}>User_id : {order.user}</h3>
-                      <h3 style={{ marginBottom: '10px', fontSize: '16px', fontWeight: 'bold' }}>Order_id : {order._id}</h3>
-                      <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Total: ₹{order.totalPrice}</p>
-                      <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Status: <b>{order.orderStatus}</b></p>
-                      <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Place On: <b>{order.createdAt.slice(0, 10)}</b></p>
-                    </div>
-                    {
-                      order.orderitems.map((item, index) => (
-                        <img key={index} style={styles.image} src={item.image} alt={order.name} />
-                      ))
-                    }
+          {/* Dashboard Content */}
+          {opt === "" && (
+            <div className="flex items-center justify-center h-[460px] bg-white rounded-xl shadow">
+              <h2 className={`font-bold text-center ${x > 536 ? "text-5xl" : "text-3xl"}`}>
+                Welcome, ADMIN!
+              </h2>
+            </div>
+          )}
+
+          {/* Orders */}
+          {opt === "orders" && orderdets.length > 0 && (
+            <div className="space-y-6 max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow">
+              {orderdets.map((order) => (
+                <div
+                  key={order._id}
+                  className="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:shadow-lg transition"
+                  onClick={() => {
+                    setselectedorder(orderdets.find((ord) => ord._id === order._id));
+                    setopt("theorder");
+                  }}
+                >
+                  <div>
+                    <h3 className="font-semibold text-lg">User ID: {order.user}</h3>
+                    <h4 className="text-sm text-gray-700 mb-1">Order ID: {order._id}</h4>
+                    <p className="text-sm text-gray-600">Total: ₹{order.totalPrice}</p>
+                    <p className="text-sm text-gray-600">
+                      Status: <span className="font-semibold">{order.orderStatus}</span>
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Placed On: <span className="font-medium">{order.createdAt.slice(0, 10)}</span>
+                    </p>
                   </div>
-                ))}
-              </div>
-            }
-
-            {opt === "theorder" &&
-              <>
-                <div style={{ position: "relative", top: "80px", opacity: "0.9", backgroundColor: "#D2F1FE", height: '600px', alignItems: "center", justifyContent: "center", overflowY: "auto" }}>
-
-                  <h1 style={{ position: "relative", top: "20px", left: "30px" }}><b>Order Summary: </b></h1>
-                  <div style={styles.grandTotalContainer3}>
-                    <div style={{ fontSize: '20px', whiteSpace: "nowrap" }}>Placed On:</div>
-                    <div style={{ fontSize: '20px', whiteSpace: "nowrap" }}>{selectedorder[0].createdAt.slice(0, 10)}</div>
-                  </div>
-                  <ul style={styles.productList}>
-                    {selectedorder[0].orderitems.map((product, index) => (
-                      <div style={styles.product} key={index}>
-                        <img style={styles.image} src={product.image} alt={product.name} />
-                        <div style={styles.details}>
-                          <h3 style={{ marginBottom: '10px', fontSize: '20px', fontWeight: 'bold' }}>{product.name}</h3>
-                          <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Price: ₹{product.price}</p>
-                          <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Quantity: {product.quantity}</p>
-                          <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Total: ₹{product.price * product.quantity}</p>
-                        </div>
-                      </div>
+                  <div className="flex space-x-3">
+                    {order.orderitems.map((item, i) => (
+                      <img
+                        key={i}
+                        src={item.image}
+                        alt={item.name}
+                        className="w-20 h-20 object-cover rounded-md shadow"
+                      />
                     ))}
-
-                  </ul>
-                  <div style={{ display: "flex" }}>
-                    <div style={{ marginLeft: "70px" }}>
-                      <h2 style={{ marginBottom: "40px", whiteSpace: "nowrap" }}><b>Shipping Address : </b></h2>
-                      <div style={styles.grandTotalContainer2}>
-                        <div>Address :</div>
-                        <div>{selectedorder[0].shippinginfo.address}</div>
-                      </div>
-                      <div style={styles.grandTotalContainer2}>
-                        <div>Country :</div>
-                        <div>{selectedorder[0].shippinginfo.country}</div>
-                      </div>
-                      <div style={styles.grandTotalContainer2}>
-                        <div>State :</div>
-                        <div>{selectedorder[0].shippinginfo.state}</div>
-                      </div>
-                      <div style={styles.grandTotalContainer2}>
-                        <div>City :</div>
-                        <div>{selectedorder[0].shippinginfo.city}</div>
-                      </div>
-                      <div style={styles.grandTotalContainer2}>
-                        <div><b>Order Status :</b></div>
-                        <div><b>{selectedorder[0].orderStatus}</b></div>
-                      </div>
-                    </div>
-                    <div style={{ marginLeft: '450px' }}>
-                      <h2 ><b>Invoice Details : </b></h2>
-                      <div style={styles.grandTotalContainer}>
-                        <div>Sub Total:</div>
-                        <div>₹{selectedorder[0].itemsPrice}</div>
-                      </div>
-                      <div style={styles.grandTotalContainer}>
-                        <div>GST (18%):</div>
-                        <div>₹{selectedorder[0].taxPrice}</div>
-                      </div>
-                      <div style={styles.grandTotalContainer}>
-                        <div>Shipping Charges:</div>
-                        <div>₹{selectedorder[0].shippingPrice}</div>
-                      </div>
-                      <hr style={{ marginTop: '30px', borderWidth: "3px", borderColor: "black" }} />
-                      <div style={styles.grandTotalContainer}>
-                        <div>Grand Total:</div>
-                        <div>₹{selectedorder[0].totalPrice}</div>
-                      </div>
-                    </div>
                   </div>
-                  <select value={selectedStatus} onChange={handleSelectChange} style={{ padding: "7px 20px", position: "relative", bottom: '30px', left: "67px", borderRadius: "10px", fontFamily: "serif", fontSize: '22px', textDecoration: "bold", marginRight: "20px" }}>
-                    <option value="shipped"><b>shipped</b></option>
-                    <option value="delivered"><b>delivered</b></option>
-                  </select>
-                  <button onClick={() => update()} type="button" className="btn btn-warning" style={{ position: "relative", bottom: '34px', left: "80px" }}>Update Status</button>
-
                 </div>
-              </>
-            }
+              ))}
+            </div>
+          )}
 
+          {/* Single Order */}
+          {opt === "theorder" && selectedorder && (
+            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow space-y-8">
+              <h2 className="text-2xl font-bold">Order Summary:</h2>
+              <div className="flex justify-between font-semibold">
+                <div>Placed On:</div>
+                <div>{selectedorder.createdAt.slice(0, 10)}</div>
+              </div>
 
-            {
-
-              opt === "products" &&
-
-              <div style={{ position: "relative", top: "80px", opacity: "0.9", backgroundColor: "#D2F1FE", height: '600px', alignItems: "center", justifyContent: "center", overflowY: "auto", width: "auto" }}>
-                <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-                  <button type="button" className="btn btn-primary" onClick={() => setopt("createproduct")} >Create New Product</button>
-                </div>
-                {allProducts.map((product, index) => (
-                  <div key={index} style={styles.product} >
-                    <img style={styles.image} src={product.images[0].url} alt={product.name} />
-                    <div style={styles.details}>
-                      <h3 style={{ marginBottom: '10px', fontSize: '17px', fontWeight: 'bold' }}>Product Name: {product.name}</h3>
-                      <h3 style={{ marginBottom: '10px', fontSize: '17px', fontWeight: 'bold' }}>Product_id : {product._id}</h3>
-                      <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Description: {product.description}</p>
-                      <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Stock: <b>{product.stock}</b></p>
-                      <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Created/Updated By: <b>{product.user}</b></p>
-                      <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Created On: <b>{product.createdAt.slice(0, 10)}</b></p>
+              <div className="space-y-4">
+                {selectedorder.orderitems.map((product, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center space-x-6 border rounded p-4 shadow-sm"
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-24 h-24 object-cover rounded"
+                    />
+                    <div>
+                      <h3 className="text-xl font-semibold">{product.name}</h3>
+                      <p>Price: ₹{product.price}</p>
+                      <p>Quantity: {product.quantity}</p>
+                      <p>Total: ₹{product.price * product.quantity}</p>
                     </div>
-                    <button type="button" className="btn btn-success" onClick={() => { settheproduct(allProducts.filter(prod => prod._id === product._id)); thepro() }} >Edit Product</button>
-                    <i className="fa-solid fa-trash ml-4" style={{ position: "relative", left: "10px" }} onClick={() => deleteprod(product._id)}></i>
                   </div>
                 ))}
               </div>
-            }
 
-            {
-              opt === "createproduct" && (
-                <div style={style.editProductContainer}>
-                  <h1 style={style.editProductHeader}>Create New Product:</h1>
-                  <form onSubmit={handleSubmit}>
-                    <div style={style.product}>
-                      <div style={{ display: "flex", flexDirection: "column", textAlign: "center", alignItems: "center", justifyContent: "center" }}>
-                        <label htmlFor="name" style={style.label}>New Product's Name:</label>
-                        <input type="text" name="name" value={newproduct.name} onChange={handleChangenewprod} style={style.input} />
-                        <label htmlFor="description" style={style.label}>New Product's Description:</label>
-                        <textarea name="description" value={newproduct.description} onChange={handleChangenewprod} style={style.textarea} />
-                        <label htmlFor="price" style={style.label}>New Product's Price (in Rupees):</label>
-                        <input type="number" name="price" value={newproduct.price} onChange={handleChangenewprod} style={style.input} />
-                        <label htmlFor="category" style={style.label}>New Product's Category:</label>
-                        <input type="text" name="category" value={newproduct.category} onChange={handleChangenewprod} style={style.input} />
-                        <label htmlFor="stock" style={style.label}>New Product's Stock:</label>
-                        <input type="number" name="stock" value={newproduct.stock} onChange={handleChangenewprod} style={style.input} />
-                        <label htmlFor="url" style={style.label}>New Product's Image URL:</label>
-                        <input type="text" name="url" value={newproduct.images.url} onChange={handleChangenewprodimage} style={style.input} />
-                        <label htmlFor="user" style={style.label}>Created/Updated By:</label>
-                        <input type="text" name="user" value={user._id} disabled style={style.disabledInput} />
-                        {
-                          newproduct.name !== "" && newproduct.description !== "" && newproduct.price !== "" && newproduct.category !== "" && newproduct.stock !== "" && newproduct.images.url !== "" && (
-                            <button type="submit" className="btn btn-success" style={styles.button} onClick={handlecreatenewprod}>Create The Product</button>
-                          )
-                        }
-
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              )
-            }
-
-            {opt === "theproduct" && (
-              <div style={style.editProductContainer}>
-                <h1 style={style.editProductHeader}>Edit Product Details:</h1>
-                <form onSubmit={handleSubmit}>
-                  <div style={{
-                    display: "flex",
-                    margin: "20px",
-                    justifyContent: "center",
-                    overflowY : "auto"
-                  }}>
-                    
-                    <div style={style.details}>
-                    <img style={style.image} src={editedProduct[0].images[0].url} alt={editedProduct[0].name} />
-                      <label htmlFor="name" style={style.label}>Product Name:</label>
-                      <input type="text" name="name" value={editedProduct[0].name} onChange={(e) => handleChange(0, "name", e.target.value)} style={style.input} />
-                      <label htmlFor="_id" style={style.label}>Product ID:</label>
-                      <input type="text" name="_id" value={editedProduct[0]._id} disabled style={style.disabledInput} />
-                      <label htmlFor="description" style={style.label}>Description:</label>
-                      <textarea name="description" value={editedProduct[0].description} onChange={(e) => handleChange(0, "description", e.target.value)} style={style.textarea} />
-                      <label htmlFor="price" style={style.label}>Price (in Rupees):</label>
-                      <input type="number" name="price" value={editedProduct[0].price} onChange={(e) => handleChange(0, "price", e.target.value)} style={style.input} />
-                      <label htmlFor="category" style={style.label}>Category:</label>
-                      <input type="text" name="category" value={editedProduct[0].category} onChange={(e) => handleChange(0, "category", e.target.value)} style={style.input} />
-                      <label htmlFor="stock" style={style.label}>Stock:</label>
-                      <input type="number" name="stock" value={editedProduct[0].stock} onChange={(e) => handleChange(0, "stock", e.target.value)} style={style.input} />
-
-                      <label htmlFor="url" style={style.label}>Image URL:</label>
-                      <input type="text" name="url" value={editimageurl} onChange={(e) => handleeditimage(e)} style={style.input} />
-
-                      <label htmlFor="user" style={style.label}>Created/Updated By:</label>
-                      <input type="text" name="user" value={user._id} disabled style={style.disabledInput} />
-                      <label htmlFor="createdAt" style={style.label}>Created On:</label>
-                      <input type="text" name="createdAt" value={editedProduct[0].createdAt.slice(0, 10)} disabled style={style.disabledInput} />
-                      <button type="submit" className="btn btn-success" style={styles.button}>Update Product Details</button>
-                    </div>
+              <div className="flex flex-wrap gap-10 justify-between">
+                <div className="space-y-2 w-[320px]">
+                  <h3 className="font-bold text-lg">Shipping Address:</h3>
+                  <div className="flex justify-between font-semibold">
+                    <span>Address:</span>
+                    <span>{selectedorder.shippinginfo.address}</span>
                   </div>
-                </form>
+                  <div className="flex justify-between font-semibold">
+                    <span>Country:</span>
+                    <span>{selectedorder.shippinginfo.country}</span>
+                  </div>
+                  <div className="flex justify-between font-semibold">
+                    <span>State:</span>
+                    <span>{selectedorder.shippinginfo.state}</span>
+                  </div>
+                  <div className="flex justify-between font-semibold">
+                    <span>City:</span>
+                    <span>{selectedorder.shippinginfo.city}</span>
+                  </div>
+                  <div className="flex justify-between font-semibold">
+                    <span>Order Status:</span>
+                    <span>{selectedorder.orderStatus}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2 w-[320px]">
+                  <h3 className="font-bold text-lg">Invoice Details:</h3>
+                  <div className="flex justify-between font-semibold">
+                    <span>Sub Total:</span>
+                    <span>₹{selectedorder.itemsPrice}</span>
+                  </div>
+                  <div className="flex justify-between font-semibold">
+                    <span>GST (18%):</span>
+                    <span>₹{selectedorder.taxPrice}</span>
+                  </div>
+                  <div className="flex justify-between font-semibold">
+                    <span>Shipping Charges:</span>
+                    <span>₹{selectedorder.shippingPrice}</span>
+                  </div>
+                  <hr className="border-t-2 border-gray-400 my-4" />
+                  <div className="flex justify-between font-bold text-lg">
+                    <span>Grand Total:</span>
+                    <span>₹{selectedorder.totalPrice}</span>
+                  </div>
+                </div>
               </div>
-            )}
 
-
-
-
-            {
-              opt === "customers" &&
-              <div style={{ position: "relative", top: "80px", opacity: "0.9", backgroundColor: "#D2F1FE", height: '600px', alignItems: "center", justifyContent: "center", overflowY: "auto" }}>
-                <ul style={styles.productList}>
-                  {allUsers.map((user, index) => (
-                    <li key={index} style={styles.product}>
-                      <div style={styles.details}>
-                        <h3 style={{ marginBottom: '10px', fontSize: '20px', fontWeight: 'bold' }}>UserName: {user.username}</h3>
-                        <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>UserID: <b>{user._id}</b></p>
-                        <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}>Email: {user.email}</p>
-                        <p style={{ marginBottom: '5px', color: '#666', fontSize: '16px' }}><b>Role: {user.work}</b></p>
-                      </div>
-                      <button type="button" className="btn btn-success" onClick={() => { changeroles(user.work, user.email) }} >Switch Role</button>
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex items-center space-x-4 mt-6">
+                <select
+                  value={selectedStatus}
+                  onChange={handleSelectChange}
+                  className="border border-gray-300 rounded-lg px-5 py-2 font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-sky-400"
+                >
+                  <option value="shipped">Shipped</option>
+                  <option value="delivered">Delivered</option>
+                </select>
+                <button
+                  onClick={update}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-6 py-2 rounded-lg transition-shadow shadow-md"
+                >
+                  Update Status
+                </button>
               </div>
-            }
+            </div>
+          )}
 
+          {/* Products List */}
+          {opt === "products" && (
+            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow space-y-6">
+              <div className="flex justify-center mb-6">
+                <button
+                  onClick={() => setopt("createproduct")}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition"
+                >
+                  Create New Product
+                </button>
+              </div>
+              {allProducts.map((product) => (
+                <div
+                  key={product._id}
+                  className="flex items-center space-x-6 p-4 border rounded-lg shadow-sm"
+                >
+                  <img
+                    src={product.images[0].url}
+                    alt={product.name}
+                    className="w-24 h-24 rounded object-cover"
+                  />
+                  <div className="flex-grow">
+                    <h3 className="font-semibold text-lg">{product.name}</h3>
+                    <p className="text-gray-700">ID: {product._id}</p>
+                    <p className="text-gray-600">{product.description}</p>
+                    <p className="text-gray-600">
+                      Stock: <span className="font-semibold">{product.stock}</span>
+                    </p>
+                    <p className="text-gray-600">
+                      Created/Updated By: <span className="font-semibold">{product.user}</span>
+                    </p>
+                    <p className="text-gray-600">
+                      Created On: <span className="font-semibold">{product.createdAt.slice(0, 10)}</span>
+                    </p>
+                  </div>
+                  <div className="flex flex-col space-y-2">
+                    <button
+                      onClick={() => {
+                        settheproduct(allProducts.filter((prod) => prod._id === product._id));
+                        thepro();
+                      }}
+                      className="bg-green-600 hover:bg-green-700 text-white rounded px-4 py-2 font-semibold shadow transition"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteprod(product._id)}
+                      className="bg-red-600 hover:bg-red-700 text-white rounded px-4 py-2 font-semibold shadow transition"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
+          {/* Create Product */}
+          {opt === "createproduct" && (
+            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow flex flex-col items-center">
+              <h2 className="text-2xl font-bold mb-6">Create New Product:</h2>
+              <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+                <label className="block font-semibold text-gray-700">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={newproduct.name}
+                  onChange={handleChangenewprod}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-400"
+                />
 
+                <label className="block font-semibold text-gray-700">Description</label>
+                <textarea
+                  name="description"
+                  value={newproduct.description}
+                  onChange={handleChangenewprod}
+                  className="w-full px-4 py-2 border rounded-lg min-h-[80px] focus:ring-2 focus:ring-sky-400"
+                />
 
-          </div>
+                <label className="block font-semibold text-gray-700">Price (₹)</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={newproduct.price}
+                  onChange={handleChangenewprod}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-400"
+                />
+
+                <label className="block font-semibold text-gray-700">Category</label>
+                <input
+                  type="text"
+                  name="category"
+                  value={newproduct.category}
+                  onChange={handleChangenewprod}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-400"
+                />
+
+                <label className="block font-semibold text-gray-700">Stock</label>
+                <input
+                  type="number"
+                  name="stock"
+                  value={newproduct.stock}
+                  onChange={handleChangenewprod}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-400"
+                />
+
+                <label className="block font-semibold text-gray-700">Image URL</label>
+                <input
+                  type="text"
+                  name="url"
+                  value={newproduct.images.url}
+                  onChange={handleChangenewprodimage}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-400"
+                />
+
+                <label className="block font-semibold text-gray-700">Created/Updated By</label>
+                <input
+                  type="text"
+                  value={user._id}
+                  disabled
+                  className="w-full px-4 py-2 border bg-gray-100 text-gray-600 rounded-lg"
+                />
+
+                {newproduct.name &&
+                  newproduct.description &&
+                  newproduct.price &&
+                  newproduct.category &&
+                  newproduct.stock &&
+                  newproduct.images.url && (
+                    <button
+                      type="submit"
+                      onClick={handlecreatenewprod}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition"
+                    >
+                      Create Product
+                    </button>
+                  )}
+              </form>
+            </div>
+          )}
+
+          {/* Edit Product */}
+          {opt === "theproduct" && editedProduct && (
+            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow flex flex-col items-center">
+              <h2 className="text-2xl font-bold mb-6">Edit Product Details:</h2>
+              <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+                <img
+                  src={editimageurl}
+                  alt={editedProduct.name}
+                  className={`w-full rounded mb-6 ${x > 603 ? "max-h-[600px]" : "max-h-[400px]"} object-contain`}
+                />
+
+                <label className="block font-semibold text-gray-700">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={editedProduct.name}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-400"
+                />
+
+                <label className="block font-semibold text-gray-700">Product ID</label>
+                <input
+                  type="text"
+                  value={editedProduct._id}
+                  disabled
+                  className="w-full px-4 py-2 border bg-gray-100 text-gray-600 rounded-lg"
+                />
+
+                <label className="block font-semibold text-gray-700">Description</label>
+                <textarea
+                  name="description"
+                  value={editedProduct.description}
+                  onChange={(e) => handleChange("description", e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg min-h-[80px] focus:ring-2 focus:ring-sky-400"
+                />
+
+                <label className="block font-semibold text-gray-700">Price (₹)</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={editedProduct.price}
+                  onChange={(e) => handleChange("price", e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-400"
+                />
+
+                <label className="block font-semibold text-gray-700">Category</label>
+                <input
+                  type="text"
+                  name="category"
+                  value={editedProduct.category}
+                  onChange={(e) => handleChange("category", e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-400"
+                />
+
+                <label className="block font-semibold text-gray-700">Stock</label>
+                <input
+                  type="number"
+                  name="stock"
+                  value={editedProduct.stock}
+                  onChange={(e) => handleChange("stock", e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-400"
+                />
+
+                <label className="block font-semibold text-gray-700">Image URL</label>
+                <input
+                  type="text"
+                  value={editimageurl}
+                  onChange={handleeditimage}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-400"
+                />
+
+                <label className="block font-semibold text-gray-700">Created/Updated By</label>
+                <input
+                  type="text"
+                  value={user._id}
+                  disabled
+                  className="w-full px-4 py-2 border bg-gray-100 text-gray-600 rounded-lg"
+                />
+
+                <label className="block font-semibold text-gray-700">Created On</label>
+                <input
+                  type="text"
+                  value={editedProduct.createdAt ? editedProduct.createdAt.slice(0, 10) : ""}
+                  disabled
+                  className="w-full px-4 py-2 border bg-gray-100 text-gray-600 rounded-lg"
+                />
+
+                <button
+                  type="submit"
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition"
+                >
+                  Update Details
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* Users List */}
+          {opt === "customers" && (
+            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow">
+              <ul className="space-y-4">
+                {allUsers.map((user) => (
+                  <li
+                    key={user._id}
+                    className="flex items-center justify-between p-4 shadow rounded bg-gray-50"
+                  >
+                    <div>
+                      <h3 className="text-xl font-semibold mb-1">UserName: {user.username}</h3>
+                      <p className="text-gray-700">
+                        UserID: <span className="font-semibold">{user._id}</span>
+                      </p>
+                      <p className="text-gray-700">Email: {user.email}</p>
+                      <p className="text-gray-700 font-semibold">Role: {user.work}</p>
+                    </div>
+                    <button
+                      onClick={() => changeroles(user.work, user.email)}
+                      className="bg-green-600 hover:bg-green-700 text-white font-bold px-5 py-2 rounded shadow transition"
+                    >
+                      Switch Role
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       ) : (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center', // Horizontal centering
-          alignItems: 'center', // Vertical centering
-          minHeight: '1000px',
-          height: "auto",
-          width: "100%",
-        }}>
-          <h1 style={{ fontSize: x > 873 ? "120px" : "55px" }}><b>Access Denied!</b></h1>
+        <div className="flex justify-center items-center min-h-[1000px] w-full bg-gray-50">
+          <h1
+            className={`font-extrabold ${
+              x > 873 ? "text-[120px]" : "text-6xl"
+            } text-red-600`}
+          >
+            Access Denied!
+          </h1>
         </div>
-
-
-
       )}
     </div>
   );
 };
-
-
 
 export default Dashboard;

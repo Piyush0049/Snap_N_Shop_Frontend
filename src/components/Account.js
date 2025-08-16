@@ -1,362 +1,224 @@
-import React, { useState, useEffect } from 'react';
-import backimg from "./snapedit_1710434121810.jpeg";
-import { useDispatch, useSelector } from 'react-redux';
-import { updateuser, updateuserpassword } from './actions/useractions';
-import { IconButton, makeStyles } from '@material-ui/core';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateuser, updateuserpassword } from "../actions/useractions";
+import { useNavigate } from "react-router-dom";
+import { IconButton } from "@material-ui/core";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 const Account = () => {
-    const [x, setx] = useState(window.innerWidth);
+  const dispatch = useDispatch();
+  const userdata = useSelector((state) => state.userdetails.user);
+  const { isAuthenticated } = useSelector((state) => state.userdetails);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const handleResize = () => setx(window.innerWidth);
+  // Profile states
+  const [userName, setUserName] = useState(userdata?.username || "");
+  const [email, setEmail] = useState(userdata?.email || "");
 
-        window.addEventListener('resize', handleResize);
+  // Password states
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-        if (localStorage.getItem("width") !== null) {
-            setx(parseInt(localStorage.getItem("width")));
-        } else {
-            setx(window.innerWidth);
-        }
+  // Modal states
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-    const dispatch = useDispatch();
-    const [userName, setUserName] = useState('');
-    const [email, setEmail] = useState('');
-    const userdata = useSelector(state => state.userdetails.user);
-    const [editopt, seteditopt] = useState(false)
-    const [changepassword, setchangepassword] = useState(false);
-    const [oldpassword, setoldpassword] = useState("");
-    const [newpassword, setnewpassword] = useState("");
-    const [cpassword, setcpassword] = useState("");
-    const [showoldPassword, setShowoldPassword] = useState(true);
-    const [shownewPassword, setShownewPassword] = useState(true);
-    const [showcPassword, setShowcPassword] = useState(true);
-    const navigate = useNavigate();
-    const useStyles = makeStyles((theme) => ({
-        input: {
-            display: 'none',
-        },
-        iconButton: {
-            marginLeft: theme.spacing(1),
-        },
-        icon: {
-            fontSize: 48, // Adjust the size of the icon as needed
-        },
-    }));
-    const classes = useStyles();
-    const editprof = () => {
-        seteditopt(!editopt);
-    }
-    const handleUpdate = () => {
-        dispatch(updateuser(userName, email));
-        navigate("/");
-        window.alert(`Your profile has been successfully updated!`);
-    }
+  // Handlers
+  const handleUpdateProfile = (e) => {
+    e.preventDefault();
+    dispatch(updateuser(userName, email));
+    setShowProfileModal(false);
+    alert("Your profile has been successfully updated!");
+    navigate("/");
+  };
 
-    const handlepasswordUpdate = () => {
-        dispatch(updateuserpassword(oldpassword, newpassword, cpassword));
-        navigate("/");
-        window.alert(`Your password has been successfully updated!`);
-    }
+  const handleUpdatePassword = (e) => {
+    e.preventDefault();
+    dispatch(updateuserpassword(oldPassword, newPassword, confirmPassword));
+    setShowPasswordModal(false);
+    alert("Your password has been successfully updated!");
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    navigate("/");
+  };
 
-    const changepass = () => {
-        setchangepassword(!changepassword)
-    }
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-sky-100 to-blue-200 flex justify-center py-16 px-4">
+      <div className="bg-white shadow-xl rounded-3xl max-w-4xl w-full p-10 space-y-10">
+        <h1 className="text-4xl font-bold text-center text-sky-900">
+          Account Details
+        </h1>
 
-    const toggleoldPasswordVisibility = () => {
-        setShowoldPassword(!showoldPassword);
-    };
-
-    const togglenewPasswordVisibility = () => {
-        setShownewPassword(!shownewPassword);
-    };
-
-    const toggleconfirmPasswordVisibility = () => {
-        setShowcPassword(!showcPassword);
-    };
-
-    const { isAuthenticated } = useSelector((state) => state.userdetails)
-    const styles = {
-        container: {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: "100%",
-            padding: '20px',
-            backgroundImage: `url(${backimg})`,
-            minHeight: "1000px"
-        },
-        heading: {
-            fontSize: '40px',
-            marginBottom: '30px',
-            color: '#333',
-            fontWeight: 'bold',
-        },
-        detailsContainer: {
-            width: '80%',
-            background: 'rgba(255, 255, 255, 0.6)', // Semi-transparent background for better readability
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
-        },
-        detailItem: {
-            marginBottom: '20px'
-        },
-        label: {
-            fontSize: '23px',
-            fontWeight: 'bold',
-            marginBottom: '5px',
-            color: '#555',
-            zIndex: 2
-        },
-        label1: {
-            marginBottom: '5px',
-            color: '#555',
-            zIndex: 2,
-            fontSize: x > 631 ? '35px' : "24px",
-            textAlign: "center",
-            fontWeight: "bold",
-        },
-        value: {
-            fontSize: x > 425 ? '18px' : "16px",
-            marginBottom: '20px',
-            color: '#777',
-            zIndex: 2
-        },
-        editButton: {
-            position: "relative",
-            left: "95%",
-            fontSize: "18px",
-            cursor: "pointer",
-            transition: "opacity 0.3s ease",
-        },
-        keyIcon: {
-            cursor: "pointer",
-            position: "relative",
-            fontSize: "18px",
-            transition: "opacity 0.3s ease",
-            "&:hover": {
-                opacity: 0.7,
-            },
-        },
-    };
-
-    return (
-        <div>
-            <div style={styles.container}>
-                <h1 style={styles.heading}>Account Details</h1>
-                <div style={styles.detailsContainer}>
-                    <div style={{ ...styles.detailItem, boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', padding: '20px', borderRadius: '10px' }}>
-                        <h3 style={styles.label}>Name:</h3>
-                        <p style={styles.value}>{userdata ? userdata.username : ''}</p>
-                    </div>
-                    <div style={{ ...styles.detailItem, boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', padding: '20px', borderRadius: '10px' }}>
-                        <h3 style={styles.label}>Email:</h3>
-                        <p style={styles.value}>{userdata ? userdata.email : ''}</p>
-                    </div>
-                    <div style={{ ...styles.detailItem, boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', padding: '20px', borderRadius: '10px' }}>
-                        <h3 style={styles.label}>Joined On:</h3>
-                        <p style={styles.value}>{userdata ? userdata.createdAt.slice(0, 10) : ''}</p>
-                    </div>
-                    {isAuthenticated &&
-                        <>
-                            <i
-                                className="fa-solid fa-pen-to-square"
-                                style={{
-                                    ...styles.editButton,
-                                    opacity: editopt ? 0.5 : 1,
-                                }}
-                                onClick={editprof}
-                            ></i>
-                            <i
-                                className="fa-solid fa-key"
-                                style={{
-                                    ...styles.keyIcon,
-                                }}
-                                onClick={changepass}
-                            ></i>
-                        </>
-                    }
-                    {
-                        changepassword && (
-                            <>
-                                <div style={{ ...styles.detailItem, boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', padding: '20px', borderRadius: '10px' }}>
-                                    <h2 style={{ ...styles.label1 }}>Change Password</h2>
-                                    <form onSubmit={handlepasswordUpdate} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        <label htmlFor="Old password" style={{ marginBottom: '10px', ...styles.label }}>Old Password </label>
-
-                                        <div style={{ display: "flex", marginLeft: "55px" }}>
-                                            <input
-                                                type={showoldPassword ? "password" : "text"}
-                                                id="Old password"
-                                                value={oldpassword}
-                                                onChange={(e) => setoldpassword(e.target.value)}
-                                                style={{
-                                                    width: '80%',
-                                                    padding: '10px',
-                                                    marginBottom: '20px',
-                                                    border: '1px solid #ccc',
-                                                    borderRadius: '10px',
-                                                    boxSizing: 'border-box',
-                                                    textAlign: "center",
-                                                    ...styles.value
-                                                }}
-                                            />
-                                            <IconButton style={{ width: "40px", height: "40px", marginTop: "9px" }}// Show/Hide password button
-                                                onClick={toggleoldPasswordVisibility}
-                                                className={classes.iconButton}
-                                            >
-                                                {showoldPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                                            </IconButton>
-                                        </div>
-
-
-                                        <label htmlFor="new password" style={{ marginBottom: '10px', ...styles.label }}>New Password</label>
-                                        <div style={{ display: "flex", marginLeft: "55px" }}>
-                                            <input
-                                                type={shownewPassword ? "password" : "text"}
-                                                id="New password"
-                                                value={newpassword}
-                                                onChange={(e) => setnewpassword(e.target.value)}
-
-                                                style={{
-                                                    width: '80%',
-                                                    padding: '10px',
-                                                    marginBottom: '20px',
-                                                    border: '1px solid #ccc',
-                                                    borderRadius: '10px',
-                                                    boxSizing: 'border-box',
-                                                    textAlign: "center",
-                                                    ...styles.value
-                                                }}
-                                            />
-                                            <IconButton style={{ width: "40px", height: "40px", marginTop: "9px" }}// Show/Hide password button
-                                                onClick={togglenewPasswordVisibility}
-                                                className={classes.iconButton}
-                                            >
-                                                {shownewPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                                            </IconButton>
-                                        </div>
-
-                                        <label htmlFor="cpassword" style={{ marginBottom: '10px', ...styles.label }}>Confirm Password</label>
-
-                                        <div style={{ display: "flex", marginLeft: "55px" }}>
-                                            <input
-                                                type={showcPassword ? "password" : "text"}
-                                                id="cpassword"
-                                                value={cpassword}
-                                                onChange={(e) => setcpassword(e.target.value)}
-                                                style={{
-                                                    width: '80%',
-                                                    padding: '10px',
-                                                    marginBottom: '20px',
-                                                    border: '1px solid #ccc',
-                                                    borderRadius: '10px',
-                                                    boxSizing: 'border-box',
-                                                    textAlign: "center",
-                                                    ...styles.value
-                                                }}
-                                            />
-                                            <IconButton style={{ width: "40px", height: "40px", marginTop: "9px" }}// Show/Hide password button
-                                                onClick={toggleconfirmPasswordVisibility}
-                                                className={classes.iconButton}
-                                            >
-                                                {showcPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                                            </IconButton>
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            style={{
-                                                backgroundColor: '#007bff',
-                                                color: '#fff',
-                                                border: 'none',
-                                                cursor: 'pointer',
-                                                borderRadius: '10px',
-                                                transition: 'background-color 0.3s ease',
-                                                fontSize: "20px",
-                                                padding: "10px"
-                                            }}
-                                        >
-                                            Update
-                                        </button>
-                                    </form>
-                                </div>
-                            </>
-                        )
-                    }
-                    {editopt ? (
-                        <div style={{ ...styles.detailItem, boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)', padding: '20px', borderRadius: '10px' }}>
-                            <h2 style={{ ...styles.label1 }}>Update Profile</h2>
-                            <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                <label htmlFor="userName" style={{ marginBottom: '10px', ...styles.label }}>User Name</label>
-                                <input
-                                    type="text"
-                                    id="userName"
-                                    value={userName}
-                                    onChange={(e) => setUserName(e.target.value)}
-                                    style={{
-                                        width: '80%',
-                                        padding: '10px',
-                                        marginBottom: '20px',
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px',
-                                        boxSizing: 'border-box',
-                                        textAlign: "center",
-                                        ...styles.value
-                                    }}
-                                />
-                                <label htmlFor="email" style={{ marginBottom: '10px', ...styles.label }}>Email Address</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    style={{
-                                        width: '80%',
-                                        padding: '10px',
-                                        marginBottom: '20px',
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px',
-                                        boxSizing: 'border-box',
-                                        textAlign: "center",
-                                        ...styles.value
-                                    }}
-
-                                />
-
-                                <button
-                                    type="submit"
-                                    style={{
-                                        backgroundColor: '#007bff',
-                                        color: '#fff',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        borderRadius: '10px',
-                                        transition: 'background-color 0.3s ease',
-                                        fontSize: "20px",
-                                        padding: "10px"
-                                    }}
-                                >
-                                    Update
-                                </button>
-                            </form>
-                        </div>
-
-                    ) :
-                        null
-                    }
-                </div>
-            </div>
+        {/* Display Info */}
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="bg-sky-50 rounded-xl shadow p-6 text-center">
+            <h3 className="text-lg font-semibold text-sky-800">Name</h3>
+            <p className="text-gray-700">{userdata?.username}</p>
+          </div>
+          <div className="bg-sky-50 rounded-xl shadow p-6 text-center">
+            <h3 className="text-lg font-semibold text-sky-800">Email</h3>
+            <p className="text-gray-700">{userdata?.email}</p>
+          </div>
+          <div className="bg-sky-50 rounded-xl shadow p-6 text-center">
+            <h3 className="text-lg font-semibold text-sky-800">Joined On</h3>
+            <p className="text-gray-700">
+              {userdata?.createdAt?.slice(0, 10)}
+            </p>
+          </div>
         </div>
-    );
+
+        {/* Action Buttons */}
+        {isAuthenticated && (
+          <div className="flex justify-center space-x-6">
+            <button
+              onClick={() => setShowProfileModal(true)}
+              className="px-8 py-3 bg-blue-600 text-white rounded-xl shadow hover:scale-105 hover:bg-blue-700 transition"
+            >
+              Edit Profile
+            </button>
+            <button
+              onClick={() => setShowPasswordModal(true)}
+              className="px-8 py-3 bg-green-600 text-white rounded-xl shadow hover:scale-105 hover:bg-green-700 transition"
+            >
+              Change Password
+            </button>
+          </div>
+        )}
+
+        {/* Profile Modal */}
+        {showProfileModal && (
+          <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-6">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-fadeIn">
+              <h2 className="text-2xl font-bold mb-6 text-center text-sky-900">
+                Update Profile
+              </h2>
+              <form onSubmit={handleUpdateProfile} className="space-y-6">
+                <input
+                  type="text"
+                  className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                  placeholder="User Name"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  required
+                />
+                <input
+                  type="email"
+                  className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                  placeholder="Email Address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <div className="flex justify-between gap-4">
+                  <button
+                    type="submit"
+                    className="flex-grow py-3 bg-sky-600 text-white rounded-xl font-semibold hover:bg-sky-700 transition"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowProfileModal(false)}
+                    className="flex-grow py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Password Modal */}
+        {showPasswordModal && (
+          <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-6">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative space-y-6 animate-fadeIn">
+              <h2 className="text-2xl font-bold text-center text-sky-900">
+                Change Password
+              </h2>
+              <form onSubmit={handleUpdatePassword} className="space-y-6">
+                {/* Old Password */}
+                <div className="relative">
+                  <input
+                    type={showOldPassword ? "text" : "password"}
+                    className="w-full p-3 pr-12 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+                    placeholder="Old Password"
+                    value={oldPassword}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    required
+                  />
+                  <IconButton
+                    onClick={() => setShowOldPassword((prev) => !prev)}
+                    className="!absolute !right-2 !top-1/2 !-translate-y-1/2"
+                    size="small"
+                  >
+                    {showOldPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </div>
+                {/* New Password */}
+                <div className="relative">
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    className="w-full p-3 pr-12 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+                    placeholder="New Password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                  <IconButton
+                    onClick={() => setShowNewPassword((prev) => !prev)}
+                    className="!absolute !right-2 !top-1/2 !-translate-y-1/2"
+                    size="small"
+                  >
+                    {showNewPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </div>
+                {/* Confirm Password */}
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    className="w-full p-3 pr-12 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                  <IconButton
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="!absolute !right-2 !top-1/2 !-translate-y-1/2"
+                    size="small"
+                  >
+                    {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <button
+                    type="submit"
+                    className="flex-grow py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowPasswordModal(false)}
+                    className="flex-grow py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
-
-
 
 export default Account;

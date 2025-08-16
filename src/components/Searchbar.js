@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import backimage from './snapedit_1709804086088.jpeg';
 import { useNavigate } from 'react-router-dom';
 const SearchBar = () => {
     
@@ -58,7 +57,8 @@ const SearchBar = () => {
         },
     };
     return (
-        <div style={{ backgroundImage: `url(${backimage})`, backgroundSize: 'cover', minHeight: '800px' ,// Adjusted height based on window width
+        <div style={{ backgroundImage: `url(/img/snapedit_1709804086088.jpeg)`, backgroundSize: 'cover', minHeight: '800px' ,// Adjusted height based on window width
+
         width : "100%"}}>
             <div style={styles.container}>
                 <input

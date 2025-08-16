@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import backgroundImage from './snapedit_1710097319045.jpeg';
 import { useDispatch } from 'react-redux';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { IconButton} from '@material-ui/core';
 import { useNavigate, useParams } from 'react-router-dom';
-import { forgotpasswordreset } from './actions/useractions'
+import { forgotpasswordreset } from '../actions/useractions'
 const Getnewpassword = () => {
 
     const [password, setPassword] = useState('');
@@ -57,7 +56,7 @@ const Getnewpassword = () => {
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'column',
-            backgroundImage: `url(${backgroundImage}`,
+            backgroundImage: `url(/img/snapedit_1710097319045.jpeg)`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center'

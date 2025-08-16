@@ -1,101 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 function Footer() {
-  const [x, setx] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setx(window.innerWidth);
-
-    window.addEventListener('resize', handleResize);
-    
-    if (localStorage.getItem("width") !== null) {
-      setx(parseInt(localStorage.getItem("width")));
-    } else {
-      setx(window.innerWidth);
-    }
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const footerStyle = {
-    backgroundColor: '#333',
-    color: '#fff',
-    padding: '20px',
-    textAlign: 'center',
-    bottom: 0,
-    height: 'auto',
-    width: "100%",
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  };
-
-  const containerStyle = {
-    display: 'flex',
-    flexDirection: 'row' ,
-    justifyContent: x >= 768 ? 'space-around' : 'center',
-    alignItems: 'center' 
-  };
-  
-
-  const headingStyle = {
-    fontSize: '15px',
-  };
-
-  const paragraphStyle = {
-    width: '220px',
-    fontSize: '15px' 
-  };
-
-  const hrStyle = {
-    margin: '20px 0',
-  };
-
-  const copyrightContainerStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  };
-
   return (
-    <div style={{ width: "100%" }}>
-      <footer style={footerStyle}>
-        <div style={containerStyle}>
-          {x >= 768 && (
-            <div>
-              <h3 style={headingStyle}>About Us</h3>
-              <p style={paragraphStyle}>
-                "Snap & Shop" revolutionizes online shopping by integrating cutting-edge image recognition technology.
-              </p>
-            </div>
-          )}
-          <div>
-            <h3 style={headingStyle}>Contact Us</h3>
-            <p style={paragraphStyle}>Email: S&S@gmail.com</p>
-            <p style={paragraphStyle}>Phone: +94857XXXXX</p>
-          </div>
-          {x >= 768 && (
-            <div>
-              <h3 style={headingStyle}>Follow Us</h3>
-              <Link to="/" className="nav-link active mt-2" aria-current="page" style={paragraphStyle}>
+    <footer className="bg-gray-900 text-white py-10">
+      {/* Top Section */}
+      <div className="container mx-auto px-4 flex flex-col md:flex-row md:justify-between gap-8">
+        
+        {/* About Us */}
+        <div className="md:w-1/3 flex flex-col items-center text-center">
+          <h3 className="text-lg font-semibold mb-3">About Us</h3>
+          <p className="text-gray-300 text-sm leading-relaxed max-w-xs">
+            "Snap & Shop" revolutionizes online shopping by integrating
+            cutting-edge image recognition technology.
+          </p>
+        </div>
+
+        {/* Contact Us */}
+        <div className="md:w-1/3 flex flex-col items-center text-center">
+          <h3 className="text-lg font-semibold mb-3">Contact Us</h3>
+          <p className="text-gray-300 text-sm">Email: S&S@gmail.com</p>
+          <p className="text-gray-300 text-sm">Phone: +94857XXXXX</p>
+        </div>
+
+        {/* Follow Us */}
+        <div className="md:w-1/3 flex flex-col items-center text-center">
+          <h3 className="text-lg font-semibold mb-3">Follow Us</h3>
+          <ul className="space-y-2">
+            <li>
+              <Link to="/" className="text-gray-300 hover:text-white transition">
                 Facebook
               </Link>
-              <Link to="/" className="nav-link active mt-2" aria-current="page" style={paragraphStyle}>
+            </li>
+            <li>
+              <Link to="/" className="text-gray-300 hover:text-white transition">
                 Twitter
               </Link>
-              <Link to="/" className="nav-link active mt-2" aria-current="page" style={paragraphStyle}>
+            </li>
+            <li>
+              <Link to="/" className="text-gray-300 hover:text-white transition">
                 Instagram
               </Link>
-            </div>
-          )}
+            </li>
+          </ul>
         </div>
-        <hr style={hrStyle} />
-        <div style={copyrightContainerStyle}>
-          <p style={paragraphStyle}>&copy; 2024 Snap & Shop. All rights reserved.</p>
-        </div>
-      </footer>
-    </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-gray-700 mt-8 pt-4">
+        <p className="text-center text-gray-400 text-sm">
+          &copy; 2024 Snap & Shop. All rights reserved.
+        </p>
+      </div>
+    </footer>
   );
 }
 

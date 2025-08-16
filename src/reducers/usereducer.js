@@ -1,5 +1,5 @@
 
-import { USER_LOGIN_FAIL, USER_LOGIN_SUCCESS, USER_LOGIN_REQUEST, USER_SIGNUP_FAIL, USER_SIGNUP_REQUEST, USER_SIGNUP_SUCCESS, USER_LOAD_FAIL, USER_LOAD_SUCCESS, USER_LOAD_REQUEST, USER_LOGOUT_FAIL, USER_LOGOUT_REQUEST, USER_LOGOUT_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_SUCCESS, USER_UPDATE_REQUEST, USER_UPDATEPASS_FAIL, USER_UPDATEPASS_REQUEST, USER_UPDATEPASS_SUCCESS, USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_FORGOT_FAIL, USER_FORGOT_SUCCESS, USER_FORGOT_REQUEST, FORGOT_RESET_REQUEST, FORGOT_RESET_SUCCESS, FORGOT_RESET_FAIL, ALL_USERS_FAIL, ALL_USERS_SUCCESS, ALL_USERS_REQUEST } from "../components/constants/userconstants";
+import { USER_LOGIN_FAIL, USER_LOGIN_SUCCESS, USER_LOGIN_REQUEST, USER_SIGNUP_FAIL, USER_SIGNUP_REQUEST, USER_SIGNUP_SUCCESS, USER_LOAD_FAIL, USER_LOAD_SUCCESS, USER_LOAD_REQUEST, USER_LOGOUT_FAIL, USER_LOGOUT_REQUEST, USER_LOGOUT_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_SUCCESS, USER_UPDATE_REQUEST, USER_UPDATEPASS_FAIL, USER_UPDATEPASS_REQUEST, USER_UPDATEPASS_SUCCESS, USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_FORGOT_FAIL, USER_FORGOT_SUCCESS, USER_FORGOT_REQUEST, FORGOT_RESET_REQUEST, FORGOT_RESET_SUCCESS, FORGOT_RESET_FAIL, ALL_USERS_FAIL, ALL_USERS_SUCCESS, ALL_USERS_REQUEST } from "../constants/userconstants";
 
 export const userreducer = (state = { user: {} }, action) => {
   switch (action.type) {
@@ -14,6 +14,7 @@ export const userreducer = (state = { user: {} }, action) => {
         isAuthenticated: false,
         user: {}
       };
+
     case USER_SIGNUP_SUCCESS:
     case USER_LOGIN_SUCCESS:
     case USER_LOAD_SUCCESS:
@@ -23,14 +24,15 @@ export const userreducer = (state = { user: {} }, action) => {
         isAuthenticated: true,
         user: action.payload.user
       };
+
     case USER_LOGOUT_SUCCESS:
     case USER_DELETE_SUCCESS:
       return {
-        ...state,
-        loading: true,
+        loading: false,       // ✅ not loading anymore
         isAuthenticated: false,
-        user: {}
+        user: {},             // ✅ clear user completely
       };
+
     case USER_SIGNUP_FAIL:
     case USER_LOGIN_FAIL:
     case USER_LOAD_FAIL:
@@ -40,12 +42,15 @@ export const userreducer = (state = { user: {} }, action) => {
         ...state,
         loading: false,
         isAuthenticated: false,
-        error: action.payload.error
+        user: {},             // ✅ clear user on failure too
+        error: action.payload?.error || action.payload
       };
+
     default:
-      return state; // Don't forget the default case
+      return state;
   }
 };
+
 
 
 export const profilereducer = (state = {}, action) => {
@@ -86,25 +91,24 @@ export const alluserreducer = (state = { allUsers: [] }, action) => {
       return {
         ...state,
         loading: true,
-        isAuthenticated: false,
         allUsers: []
-      }
+      };
+
     case ALL_USERS_SUCCESS:
       return {
         ...state,
-        loading: true,
-        isAuthenticated: false,
+        loading: false,
         allUsers: action.payload.users
-      }
+      };
+
     case ALL_USERS_FAIL:
       return {
         ...state,
-        loading: true,
-        isAuthenticated: false,
-        error: action.payload.error
-      }
+        loading: false,
+        error: action.payload
+      };
 
     default:
-      return state; // Don't forget the default case
+      return state;
   }
-}
+};

@@ -1,168 +1,182 @@
-import React, { Fragment, useEffect } from 'react';
-import backgroundImage from './background-5.jpeg';
-import ProductItem from './ProductItem';
-import { allproducts } from './actions/productActions';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import Pagination from '@mui/material/Pagination';
-import { useState } from 'react';
-import Slider from '@mui/material/Slider';
-import Typography from '@mui/material/Typography';
+import React, { Fragment, useEffect, useState } from "react";
+import ProductItem from "./ProductItem";
+import { allproducts } from "../actions/productActions";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import Pagination from "@mui/material/Pagination";
+import Slider from "@mui/material/Slider";
+import Typography from "@mui/material/Typography";
+import { Dialog } from "@mui/material";
 
 function Allproducts() {
-    const [x, setx] = useState(window.innerWidth);
+  const [x, setx] = useState(window.innerWidth);
+  const [categ, setcateg] = useState("");
+  const [range, setRange] = useState([0, 90000]);
+  const [pagenum, setPagenum] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false); // modal toggle
 
-    useEffect(() => {
-        const handleResize = () => setx(window.innerWidth);
+  const dispatch = useDispatch();
+  const params = useParams();
 
-        window.addEventListener('resize', handleResize);
+  useEffect(() => {
+    const handleResize = () => setx(window.innerWidth);
+    window.addEventListener("resize", handleResize);
 
-        if (localStorage.getItem("width") !== null) {
-            setx(parseInt(localStorage.getItem("width")));
-        } else {
-            setx(window.innerWidth);
-        }
+    const savedWidth = localStorage.getItem("width");
+    setx(savedWidth ? parseInt(savedWidth) : window.innerWidth);
 
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-    const [categ, setcateg] = useState(""); // Initial range values
-    const [range, setRange] = useState([0, 90000]); // Initial range values
-    const [pagenum, setPagenum] = useState("");
-    const dispatch = useDispatch();
-    const params = useParams();
-    useEffect(() => {
-        dispatch(allproducts(params.keyword, pagenum, range[0], range[1], categ));
-    }, [dispatch, pagenum, params, categ, range]);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-    const { products, resultperpage, productcount } = useSelector((state) => state.products);
-    const containerStyle = {
-        display: 'flex',
-        flexDirection: x > 1304 ? "row" : "column",
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        alignItems: x > 1304 ? 'flex-start' : "center", // Align items at the start of the container
-        position: 'relative',
-        width: '90%',
-        margin: 'auto',
-        marginTop: x > 510 ? '-180px' : '-120px', // Adjusting the top margin to move the product items slightly upward
-        padding: '20px',
-        borderRadius: '10px',
+  useEffect(() => {
+    dispatch(allproducts(params.keyword, pagenum, range[0], range[1], categ));
+  }, [dispatch, pagenum, params, categ, range]);
 
-    };
+  const { products, resultperpage, productcount } = useSelector(
+    (state) => state.products
+  );
 
-    const pageStyle = {
-        backgroundColor: "#9DE2FF",
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'repeat',
-        minHeight: "1200px",
-        height: "auto",
-        width: "100%",
-    };
-    let numofpages = 0;
-    if (products) {
-        numofpages = Math.ceil(productcount / resultperpage);
-    }
+  let numofpages = products ? Math.ceil(productcount / resultperpage) : 0;
 
-    const handlePageChange = (event, p) => {
-        setPagenum(p);
-    };
+  const handlePageChange = (event, p) => setPagenum(p);
+  const handleChange = (event, newValue) => setRange(newValue);
+  const onClickcateg = (e) => setcateg(e.target.innerText);
 
-    const handleChange = (event, newValue) => {
-        setRange(newValue);
-    };
+  // Filter Sidebar Content
+  const FilterContent = () => (
+    <div className="bg-white rounded-2xl shadow-lg p-6 w-full lg:w-72 h-fit border border-gray-200">
+      <Typography
+        gutterBottom
+        className="text-lg font-bold flex items-center gap-2 mb-4 text-gray-900"
+      >
+        <i className="fa-solid fa-filter"></i> Filter by Price
+      </Typography>
+      <Slider
+        value={range}
+        onChange={handleChange}
+        min={0}
+        max={50000}
+        step={500}
+        marks={[
+          { value: 0, label: "₹0" },
+          { value: 50000, label: "₹50k" },
+        ]}
+        valueLabelDisplay="auto"
+        sx={{
+          color: "#2563eb",
+          "& .MuiSlider-rail": { backgroundColor: "#ddd" },
+          "& .MuiSlider-track": { backgroundColor: "#2563eb" },
+          "& .MuiSlider-thumb": { backgroundColor: "#2563eb" },
+        }}
+      />
 
-    const onClickcateg = (e) => {
-        setcateg(e.target.innerText);
+      {/* Categories */}
+      {/* Categories */}
+      <div className="mt-6">
+        <h5 className="text-xl font-bold mb-3 flex items-center gap-2 text-gray-900">
+          <i className="fa-solid fa-list"></i> Categories
+        </h5>
+        <ul className="space-y-2">
+          {[
+            "None", // 👈 Added this
+            "Machine",
+            "Device",
+            "Accessories",
+            "Top",
+            "Bottom",
+            "Footwear",
+          ].map((cat) => (
+            <li
+              key={cat}
+              className={`cursor-pointer px-3 py-2 rounded-md text-sm md:text-base transition ${categ === cat
+                  ? "bg-blue-500 text-white"
+                  : "hover:bg-blue-100 text-gray-800"
+                }`}
+              onClick={() => setcateg(cat === "None" ? "" : cat)} // 👈 Reset filter if "None"
+            >
+              {cat}
+            </li>
+          ))}
+        </ul>
+      </div>
 
-    }
+    </div>
+  );
 
-    return (
-        <Fragment>
-            <div style={pageStyle}>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <h3 style={{ fontFamily: "revert", position: "absolute", color: "black", textAlign: "center", fontSize: x > 571 ? '60px' : "40px", marginTop: '80px', whiteSpace: "nowrap" }}><b>All Products</b></h3>
+  return (
+    <Fragment>
+      <div className="min-h-screen w-full bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200">
+        {/* Heading */}
+        <div className="flex justify-between items-center px-6 md:px-12 pt-20">
+          <h3 className="text-black text-2xl md:text-4xl font-bold md:font-extrabold drop-shadow-md tracking-wide">
+            All Products
+          </h3>
+
+          {/* Filter Button for Small Screens */}
+          <button
+            onClick={() => setFilterOpen(true)}
+            className="lg:hidden flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+          >
+            <i className="fa-solid fa-sliders"></i> Filters
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="flex flex-col lg:flex-row gap-8 px-6 lg:px-12 py-12">
+          {/* Sidebar for Large Screens */}
+          <aside className="hidden lg:block">
+            <FilterContent />
+          </aside>
+
+          {/* Products Grid */}
+          {/* Products Grid */}
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+            {products &&
+              products.map((product, index) => (
+                <div key={index} className="flex justify-center">
+                  <ProductItem product={product} />
                 </div>
+              ))}
+          </div>
 
-                <hr style={{ position: "absolute", top: "140px", borderWidth: "2px", marginLeft: "300px", marginRight: "300px", zIndex: 2 }} />
-                <div style={{ width: x > 1304 ? "250px" : (x < 1304 && x > 695 ? "200px" : (x < 695 && x > 553 ? "120px" : "120px")), position: "relative", top: x > 1180 ? "200px" : "170px", left: x > 1180 ? "50px" : "10px", zIndex: 4 }}>
-                    <div>
-                        <Typography id="range-slider" gutterBottom style={{ color: "#333", marginBottom: "5px", fontSize: x > 695 ? '20px' : "15px", fontWeight: "bold", background: 'rgba(255, 255, 255, 0.7)', padding: '10px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.9)' }}>
-                            Amount <i className="fa-solid fa-filter"></i>
-                        </Typography>
-                        <Slider
-                            value={range}
-                            onChange={handleChange}
-                            aria-labelledby="range-slider"
-                            min={0}
-                            max={50000}
-                            step={1}
-                            marks={[{ value: 0, label: <span>₹0</span> }, { value: 50000, label: <span>₹50000</span> }]}
-                            valueLabelDisplay="auto"
-                            sx={{
-                                color: '#0d47a1', // Darker primary color
-                                '& .MuiSlider-rail': {
-                                    backgroundColor: '#666', // Darker rail color
-                                },
-                                '& .MuiSlider-track': {
-                                    backgroundColor: 'rgba(33, 150, 243, 0.7)', // Darker track color
-                                },
-                                '& .MuiSlider-thumb': {
-                                    backgroundColor: '#0d47a1', // Darker thumb color
-                                },
-                            }}
-                            style={{ padding: '10px', width: x > 510 ? null : "70%" }}
-                        />
-                    </div>
-                    <Typography
-                        id="range-slider"
-                        gutterBottom
-                        component="div"
-                        style={{
-                            color: "#333",
-                            marginBottom: "5px",
-                            fontSize: '20px',
-                            fontWeight: "bold",
-                            marginTop: "15px",
-                            background: 'rgba(255, 255, 255, 0.7)',
-                            padding: '10px',
-                            borderRadius: '10px',
-                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.9)'
-                        }}
-                    >
-                        <h5 style={{ fontSize: x > 695 ? '30px' : "17px", fontWeight: "bold" }}>
-                            {x > 1304 && (<i className="fa-solid fa-list"></i>)} Categories:
-                        </h5>
-                        <ul>
-                            <li style={{ cursor: 'pointer', fontSize: x > 695 ? null : "12px" }} onMouseOver={(e) => e.target.style.color = '#049EDF'} onMouseOut={(e) => e.target.style.color = 'black'} onClick={onClickcateg}>Machine</li>
-                            <li style={{ cursor: 'pointer', fontSize: x > 695 ? null : "12px" }} onMouseOver={(e) => e.target.style.color = '#049EDF'} onMouseOut={(e) => e.target.style.color = 'black'} onClick={onClickcateg}>Device</li>
-                            <li style={{ cursor: 'pointer', fontSize: x > 695 ? null : "12px" }} onMouseOver={(e) => e.target.style.color = '#049EDF'} onMouseOut={(e) => e.target.style.color = 'black'} onClick={onClickcateg}>Accessories</li>
-                            <li style={{ cursor: 'pointer', fontSize: x > 695 ? null : "12px" }} onMouseOver={(e) => e.target.style.color = '#049EDF'} onMouseOut={(e) => e.target.style.color = 'black'} onClick={onClickcateg}>Top</li>
-                            <li style={{ cursor: 'pointer', fontSize: x > 695 ? null : "12px" }} onMouseOver={(e) => e.target.style.color = '#049EDF'} onMouseOut={(e) => e.target.style.color = 'black'} onClick={onClickcateg}>Bottom</li>
-                            <li style={{ cursor: 'pointer', fontSize: x > 695 ? null : "12px" }} onMouseOver={(e) => e.target.style.color = '#049EDF'} onMouseOut={(e) => e.target.style.color = 'black'} onClick={onClickcateg}>Footwear</li>
-                        </ul>
-                    </Typography>
+        </div>
 
-                </div>
+        {/* Pagination */}
+        {numofpages > 1 && (
+          <div className="flex justify-center pb-10">
+            <Pagination
+              count={numofpages}
+              color="primary"
+              size="large"
+              onChange={handlePageChange}
+            />
+          </div>
+        )}
+      </div>
 
-                <div style={containerStyle}>
-                    {products && products.map((product, index) => (
-                        <ProductItem key={index} product={product} style={{ background: 'rgba(255, 255, 255, 1)' }} />
-                    ))}
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {numofpages > 1 ?
-                        <div style={{ marginBottom: "20px" }}>
-                            <Pagination count={numofpages} color="primary" size="large" onChange={handlePageChange} />
-                        </div>
-                        : null
-                    }
-                </div>
-            </div>
-        </Fragment >
-    );
+      {/* Modal for Filters on Mobile */}
+      <Dialog open={filterOpen} onClose={() => setFilterOpen(false)} fullWidth>
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Filters</h2>
+            <button
+              onClick={() => setFilterOpen(false)}
+              className="text-gray-600 hover:text-gray-900"
+            >
+              <i className="fa-solid fa-xmark text-2xl"></i>
+            </button>
+          </div>
+          <FilterContent />
+          <button
+            onClick={() => setFilterOpen(false)}
+            className="mt-6 w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </Dialog>
+    </Fragment>
+  );
 }
 
 export default Allproducts;

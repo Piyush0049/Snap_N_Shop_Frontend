@@ -1,235 +1,159 @@
-import React from 'react';
-import backgroundimg from "./snapedit_1710779459498.jpeg";
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { addtocart } from './actions/cartactions';
-import { removefromcart } from './actions/cartactions';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { useState,useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { addtocart, removefromcart } from "../actions/cartactions";
+import { useNavigate, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const MyCart = () => {
-    const [x, setx] = useState(window.innerWidth);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
-    useEffect(() => {
-        const handleResize = () => setx(window.innerWidth);
-
-        window.addEventListener('resize', handleResize);
-
-        if (localStorage.getItem("width") !== null) {
-            setx(parseInt(localStorage.getItem("width")));
-        } else {
-            setx(window.innerWidth);
-        }
-
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { cartitems } = useSelector((state) => state.cart);
-    const { _id } = useSelector((state) => state.userdetails.user);
-    const { isAuthenticated } = useSelector((state) => state.userdetails);
-    
-    const styles = {
-        container: {
-            fontFamily: 'Arial, sans-serif',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundImage: `url(${backgroundimg})`,
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            minHeight: '1000px', 
-            height : "auto",
-            width : "100%",
-            padding : "0",
-            margin : "0"
-        },
-        hr2: {
-            borderWidth: "2px",
-            opacity: 0.6,
-            width: "300px",
-            position : x > 1090 ? null : "relative",
-            bottom : "6px"
-        },
-        cartContainer: {
-            width : "auto",
-            paddingLeft: x > 505 ? '30px' : null,
-            paddingRight: x > 505 ? '30px' : null,
-            paddingTop :  "30px",
-            paddingBottom : "30px",
-            borderRadius: '20px',
-            background: 'rgba(255, 255, 255, 0.9)',
-            boxShadow: '0px 20px 20px rgba(0, 0, 0, 0.1)',
-            marginTop :"100px",
-        },
-        product: {
-            marginBottom: '30px',
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            width : "100%"
-        },
-        image: {
-            width: '100px',
-            height: '100px' ,
-            borderRadius: '10px',
-            marginRight: '20px',
-        },
-        details: {
-            flex: '1',
-        },
-        quantityContainer: {
-            display: 'flex',
-            alignItems: 'center',
-        },
-        quantityButton: {
-            backgroundColor: '#5ABCE6',
-            color: '#fff',
-            padding: x > 505 ? '5px' : null,
-            borderRadius: '5px',
-            border: 'none',
-            fontSize:'20px' ,
-            cursor: 'pointer',
-            transition: 'background-color 0.3s',
-            marginRight: '5px',
-            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
-            width: "21px",
-
-        },
-        quantityButton2: {
-            backgroundColor: 'gray',
-            color: '#fff',
-            padding: x > 505 ? '5px' : null,
-            borderRadius: '5px',
-            border: 'none',
-            fontSize: '20px',
-            transition: 'background-color 0.3s',
-            marginRight: '5px',
-            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
-            width: "21px",
-        },
-        quantityText: {
-            fontSize: '20px',
-            color: '#333',
-            margin: '0 5px',
-            marginRight: "10px"
-        },
-        checkoutButton: {
-            marginTop: '30px',
-            padding: '15px 30px',
-            fontSize:'16px',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            transition: 'background-color 0.3s ease',
-            outline: 'none',
-        },
-        grandTotal: {
-            marginTop: '30px',
-            fontSize: '24px' ,
-            fontWeight: 'bold',
-            textAlign: 'center',
-        },
-
-    };
-
-    const increaseQuant = (productId, quantity, stock) => {
-        if (quantity < stock)
-            dispatch(addtocart(productId, quantity + 1, _id));
-    };
-
-    const decreaseQuant = (productId, quantity) => {
-        if (quantity > 1) {
-            dispatch(addtocart(productId, quantity - 1, _id));
-        }
-    };
-
-    const getTotal = () => {
-        if(cartitems!==null){
-        return cartitems.reduce((total, item) => total + (item.price * item.quantity), 0);
-        }
-        else{
-            return 0;
-        }
-    };
-
-    const deleteprod = (productId, quantity, stock) => {
-        const confirmDelete = window.confirm("Are you sure you want to remove this item from your cart?");
-        if (confirmDelete) {
-            dispatch(removefromcart(productId, quantity, stock));
-        }
-    };
-
-    const navtoship = () => {
-        if (isAuthenticated) {
-            navigate("/shipping")
-        }
-    }
-
-    return (
-        <div style={styles.container}>
-            <div style={{ display: "flex", position : "relative", top : "80px", justifyContent : "center" }}>
-                <Link to="/mycart" style={{ fontSize: x > 1090 ? '25px' : "16px" , color: "red", textDecoration: "none", whiteSpace : "nowrap" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
-                <hr style={styles.hr2} />
-                <Link style={{ fontSize: x > 1090 ? '25px' : "16px" , color: "red", textDecoration: "none", whiteSpace : "nowrap"  }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
-                <hr style={styles.hr2} />
-                <Link style={{ fontSize: x > 1090 ? '25px' : "16px"  , color: "red", textDecoration: "none", whiteSpace : "nowrap"  }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
-
-            </div>
-            <div style={styles.cartContainer}>
-                <h1 style={{ textAlign: 'center', marginBottom: '30px', fontSize: x > 878 ? '45px' : "33px"  }}><b>Your Cart : </b></h1>
-                {cartitems === null ? (
-                    <div style={{ textAlign: 'center', marginTop: '50px', marginBottom: '50px' }}>
-                        <h2 style={{ fontSize: '25px' , fontWeight: 'bold', color: '#333' }}>Your cart is empty</h2>
-                    </div>
-                ) : (
-                    cartitems.map((p) => (
-                        <div key={p} style={styles.product}>
-                            <img style={styles.image} src={p.image} alt={p.name} />
-                            <div style={styles.details}>
-                                <h3 style={{ marginBottom: '10px', fontSize: x > 505 ? '20px' : "15px", fontWeight: 'bold' }}>{p.name}</h3>
-                                <p style={{ marginBottom: '5px', color: '#666', fontSize:  x > 505 ?  '16px' : "12px" }}>Price: ₹{p.price}</p>
-                                <p style={{ marginBottom: '5px', color: '#666', fontSize: x > 505 ? '16px': "12px" }}>Quantity: {p.quantity}</p>
-                                <p style={{ marginBottom: '5px', color: '#666', fontSize: x > 505 ?  '16px': "12px" }}>Total: ₹{p.price * p.quantity}</p>
-                            </div>
-                            <div style={styles.quantityContainer}>
-                                <button onClick={() => decreaseQuant(p.product, p.quantity)} style={styles.quantityButton}>-</button>
-                                <span style={styles.quantityText}>{p.quantity}</span>
-                                <button onClick={() => increaseQuant(p.product, p.quantity, p.stock)} style={p.quantity === p.stock ? styles.quantityButton2 : styles.quantityButton}>+</button>
-                            </div>
-                            <i
-                                className="fa-solid fa-trash"
-                                style={{ marginTop:'110px' , marginRight: "10px", cursor: "pointer"}}
-                                onClick={() => deleteprod(p.product, p.quantity, p.stock)}
-                                // Add hover effect
-                                onMouseEnter={(e) => { e.target.style.color = "blue"; }}
-                                onMouseLeave={(e) => { e.target.style.color = "black"; }}
-                            ></i>
-                        </div>
-                    ))
-                )}
-
-                <div style={styles.grandTotal}>
-                    Total: ₹{getTotal().toFixed(2)}
-                </div>
-
-                { cartitems !== null && (
-                    cartitems.length > 0 && (
-                    <div style={{ textAlign: 'center', marginTop: '30px' }}>
-                        <button style={styles.checkoutButton} onClick={navtoship}>Proceed</button>
-                    </div>
-                ))}
-            </div>
-        </div>
-
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    setScreenWidth(
+      localStorage.getItem("width")
+        ? parseInt(localStorage.getItem("width"))
+        : window.innerWidth
     );
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { cartitems } = useSelector((state) => state.cart);
+  const { _id } = useSelector((state) => state.userdetails.user);
+  const { isAuthenticated } = useSelector((state) => state.userdetails);
+
+  const increaseQuant = (productId, quantity, stock) => {
+    if (quantity < stock) dispatch(addtocart(productId, quantity + 1, _id));
+  };
+
+  const decreaseQuant = (productId, quantity) => {
+    if (quantity > 1) dispatch(addtocart(productId, quantity - 1, _id));
+  };
+
+  const getTotal = () =>
+    cartitems
+      ? cartitems.reduce((total, item) => total + item.price * item.quantity, 0)
+      : 0;
+
+  const deleteprod = (productId, quantity, stock) => {
+    dispatch(removefromcart(productId, quantity, stock));
+    toast.success("Item removed from cart");
+  };
+
+  const navtoship = () => {
+    if (isAuthenticated) {
+      navigate("/shipping");
+    }
+  };
+
+  return (
+    <div className="bg-sky-100 min-h-screen py-24 md:py-24 px-4">
+      {/* Step Tracker */}
+      <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
+        <Link to="/mycart" className="flex items-center gap-2">
+          <i className="fa-solid fa-cart-shopping"></i>
+          <span className="hidden md:inline">View Cart</span>
+        </Link>
+        <span className=" w-20 h-0.5 bg-gray-400"></span>
+        <span className="flex items-center gap-2 opacity-40">
+          <i className="fa-solid fa-check"></i>
+          <span className="hidden md:inline">Fill Details</span>
+        </span>
+        <span className=" w-20 h-0.5 bg-gray-400"></span>
+        <span className="flex items-center gap-2 opacity-40">
+          <i className="fa-solid fa-circle-check"></i>
+          <span className="hidden md:inline">Payment</span>
+        </span>
+      </div>
+
+
+      {/* Cart Container */}
+      <div className="bg-white shadow-lg rounded-xl p-6 max-w-5xl mx-auto">
+        <h1 className="text-3xl font-bold text-center mb-8 text-sky-900">
+          Your Cart
+        </h1>
+
+        {/* Empty Cart Message */}
+        {cartitems === null || cartitems.length === 0 ? (
+          <div className="text-center text-gray-500 font-semibold py-10">
+            Your cart is empty
+          </div>
+        ) : (
+          <>
+            {/* Cart Items */}
+            <div className="space-y-6">
+              {cartitems.map((p) => (
+                <div
+                  key={p.product}
+                  className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm"
+                >
+                  {/* Product Image */}
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    className="w-24 h-24 rounded-lg object-cover"
+                  />
+
+                  {/* Product Details */}
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold">{p.name}</h3>
+                    <p className="text-gray-600">Price: ₹{p.price}</p>
+                    <p className="text-gray-600">Total: ₹{p.price * p.quantity}</p>
+                  </div>
+
+                  {/* Quantity Controls */}
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => decreaseQuant(p.product, p.quantity)}
+                      className="bg-sky-400 hover:bg-sky-500 text-white px-3 py-1 rounded-l"
+                    >
+                      -
+                    </button>
+                    <span className="px-4 py-1 font-bold">{p.quantity}</span>
+                    <button
+                      onClick={() =>
+                        increaseQuant(p.product, p.quantity, p.stock)
+                      }
+                      disabled={p.quantity === p.stock}
+                      className={`px-3 py-1 rounded-r ${p.quantity === p.stock
+                        ? "bg-gray-300 text-gray-100 cursor-not-allowed"
+                        : "bg-sky-400 hover:bg-sky-500 text-white"
+                        }`}
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Delete Icon */}
+                  <i
+                    className="fa-solid fa-trash text-gray-500 hover:text-red-500 cursor-pointer"
+                    onClick={() => deleteprod(p.product, p.quantity, p.stock)}
+                  ></i>
+                </div>
+              ))}
+            </div>
+
+            {/* Grand Total */}
+            <div className="text-center text-xl font-bold mt-8">
+              Total: ₹{getTotal().toFixed(2)}
+            </div>
+
+            {/* Checkout Button */}
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={navtoship}
+                className="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-8 py-3 rounded-lg shadow-md"
+              >
+                Proceed to Checkout
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default MyCart;
-

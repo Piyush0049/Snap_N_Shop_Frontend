@@ -1,207 +1,153 @@
-import React from 'react';
-import backimage from "./snapedit_1710779459498.jpeg";
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useNavigate, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+
 const ConfirmOrder = () => {
-    const navigate = useNavigate();
-    const { cartitems } = useSelector((state) => state.cart);
-    const [x, setx] = useState(window.innerWidth);
+  const navigate = useNavigate();
+  const { cartitems } = useSelector((state) => state.cart);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
-    useEffect(() => {
-        const handleResize = () => setx(window.innerWidth);
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
 
-        window.addEventListener('resize', handleResize);
-
-        if (localStorage.getItem("width") !== null) {
-            setx(parseInt(localStorage.getItem("width")));
-        } else {
-            setx(window.innerWidth);
-        }
-
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-    const styles = {
-
-        hr2: {
-            borderWidth: "2px",
-            opacity: 0.6,
-            width: "300px",
-        },
-        container: {
-            fontFamily: 'Arial, sans-serif',
-            padding: '20px',
-            width: "100%",
-            margin: '0 auto',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-            backgroundColor: 'rgba(255, 255, 255, 0.6)',
-            position: "relative",
-            top: "1px",
-            minHeight: "600px"
-        },
-        header: {
-            textAlign: 'center',
-            marginBottom: '80px',
-            marginTop: "20px",
-        },
-        productList: {
-            listStyleType: 'none',
-            padding: 0,
-            margin: 0,
-        },
-        grandTotalContainer: {
-            marginTop: '40px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            fontWeight: 'bold',
-            width: "300px",
-        },
-        grandTotalContainer2: {
-            marginTop: '18px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            fontWeight: 'bold',
-            width: "300px",
-        },
-        checkoutButton: {
-            marginTop: '80px',
-            padding: '15px 30px',
-            fontSize: '18px',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            transition: 'background-color 0.3s ease',
-            display: 'block',
-            margin: '0 auto',
-        },
-        image: {
-            width: "100px",
-            height: "100px",
-            borderRadius: '10px',
-            marginRight: '20px',
-        },
-        details: {
-            flex: '1',
-        },
-        product: {
-            marginBottom: '30px',
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '5px 7px 14px rgba(0, 0, 0, 0.1)',
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-        },
-    };
-
-    const getTotal = () => {
-        return cartitems.reduce((total, item) => total + (item.price * item.quantity), 0);
-    };
-
-    const shippingdet = JSON.parse(localStorage.getItem("shippingdetails"));
-
-    const navtopay = () => {
-        navigate("/payment")
-        localStorage.setItem("totalprice", (getTotal() * 1.18).toFixed(2));
+    if (localStorage.getItem("width") !== null) {
+      setScreenWidth(parseInt(localStorage.getItem("width")));
+    } else {
+      setScreenWidth(window.innerWidth);
     }
 
-    return (
-        <div style={{
-            backgroundImage: `url(${backimage})`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight: '1000px'  // Adjusted height based on window width
-            , width: "100%",
-            height: "auto", opacity: 0.9, paddingTop: '80px',
-        }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Link to="/mycart" style={{ fontSize: x > 1090 ? '25px' : "16px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
-                <hr style={styles.hr2} />
-                <Link style={{ fontSize: x > 1090 ? '25px' : "16px", color: "red", textDecoration: "none", whiteSpace: "nowrap" }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
-                <hr style={styles.hr2} />
-                <Link style={{ fontSize: x > 1090 ? '25px' : "16px", color: "red", textDecoration: "none", whiteSpace: "nowrap" }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const shippingdet = JSON.parse(localStorage.getItem("shippingdetails"));
+
+  const getTotal = () => {
+    return cartitems.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
+  const navtopay = () => {
+    navigate("/payment");
+    localStorage.setItem("totalprice", (getTotal() * 1.18).toFixed(2));
+  };
+
+  return (
+    <div className="min-h-screen bg-sky-100 py-24 md:py-24 px-6 sm:px-12 lg:px-20">
+
+      {/* Step Tracker */}
+      <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
+        <Link to="/mycart" className="flex items-center gap-2 text-green-600">
+          <i className="fa-solid fa-cart-shopping"></i>
+          <span className="hidden md:inline">View Cart</span>
+        </Link>
+        <span className=" w-20 h-0.5 bg-gray-400"></span>
+        <span className="flex items-center gap-2">
+          <i className="fa-solid fa-check"></i>
+          <span className="hidden md:inline">Fill Details</span>
+        </span>
+        <span className=" w-20 h-0.5 bg-gray-400"></span>
+        <span className="flex items-center gap-2 opacity-40">
+          <i className="fa-solid fa-circle-check"></i>
+          <span className="hidden md:inline">Payment</span>
+        </span>
+      </div>
+
+      <div className="bg-white bg-opacity-90 rounded-xl shadow-lg max-w-6xl mx-auto p-10">
+        <h1 className="text-center text-3xl font-extrabold mb-16 text-sky-900 leading-relaxed">
+          Order Summary
+        </h1>
+
+        <ul className="max-h-[400px] overflow-y-auto space-y-8 mb-16 px-4 sm:px-8">
+          {cartitems.map((p) => (
+            <li
+              key={p.product}
+              className="flex flex-col sm:flex-row sm:items-center gap-6 bg-sky-50 p-6 rounded-lg shadow-sm"
+            >
+              <img
+                src={p.image}
+                alt={p.name}
+                className="w-28 h-28 rounded-lg object-cover flex-shrink-0"
+              />
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold text-sky-800 leading-snug">{p.name}</h3>
+                <p className="text-gray-600 text-base mt-1">Price: ₹{p.price}</p>
+                <p className="text-gray-600 text-base mt-1">Quantity: {p.quantity}</p>
+                <p className="text-gray-800 font-bold text-base mt-2">
+                  Total: ₹{(p.price * p.quantity).toFixed(2)}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div
+          className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-4xl mx-auto items-start"
+        >
+          <div>
+            <h2 className="text-2xl font-bold text-sky-900 mb-8">
+              Shipping Address:
+            </h2>
+            <div className="flex flex-col gap-4 text-gray-700 text-base max-w-md">
+              <div className="flex justify-between">
+                <span className="font-semibold">Name :</span>
+                <span>{shippingdet.userDetails.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold">Phone :</span>
+                <span>{shippingdet.userDetails.phone}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold">Address :</span>
+                <span>{shippingdet.userDetails.address}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold">Country :</span>
+                <span>{shippingdet.selectedCountry.label}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold">State :</span>
+                <span>{shippingdet.selectedState.label}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold">City :</span>
+                <span>{shippingdet.selectedCity.label}</span>
+              </div>
             </div>
-            <div style={styles.container}>
-                <h1 style={styles.header}><b>Order Summary : </b></h1>
-                <ul style={styles.productList}>
-                    {cartitems.map((p) => (
-                        <div key={p} style={styles.product}>
-                            <img style={styles.image} src={p.image} alt={p.name} />
-                            <div style={styles.details}>
-                                <h3 style={{ marginBottom: '10px', fontSize: "20px", fontWeight: 'bold' }}>{p.name}</h3>
-                                <p style={{ marginBottom: '5px', color: '#666', fontSize: "20px" }}>Price: ₹{p.price}</p>
-                                <p style={{ marginBottom: '5px', color: '#666', fontSize: "20px" }}>Quantity: {p.quantity}</p>
-                                <p style={{ marginBottom: '5px', color: '#666', fontSize: "20px" }}><b>Total: ₹{p.price * p.quantity}</b></p>
-                            </div>
-                        </div>
-                    ))}
-                </ul>
+          </div>
 
-
-                <div style={{ display: x > 984 ? "flex" : "block", textAlign: x > 984 ? "left" : "center" }}>
-
-                    <div style={{ marginLeft: x > 984 ? "70px" : null, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: "70px" }}>
-                        <h2 style={{ marginBottom: "40px" }}><b>Shipping Address : </b></h2>
-                        <div style={styles.grandTotalContainer2}>
-                            <div>Name :</div>
-                            <div>{shippingdet.userDetails.name}</div>
-                        </div>
-                        <div style={styles.grandTotalContainer2}>
-                            <div>Phone :</div>
-                            <div>{shippingdet.userDetails.phone}</div>
-                        </div>
-                        <div style={styles.grandTotalContainer2}>
-                            <div>Address :</div>
-                            <div>{shippingdet.userDetails.address}</div>
-                        </div>
-                        <div style={styles.grandTotalContainer2}>
-                            <div>Country :</div>
-                            <div>{shippingdet.selectedCountry.label}</div>
-                        </div>
-                        <div style={styles.grandTotalContainer2}>
-                            <div>State :</div>
-                            <div>{shippingdet.selectedState.label}</div>
-                        </div>
-                        <div style={styles.grandTotalContainer2}>
-                            <div>City :</div>
-                            <div>{shippingdet.selectedCity.label}</div>
-                        </div>
-                    </div>
-
-
-                    <div style={{ marginLeft: x > 984 ? "30%" : null, display: x > 984 ? "null" : 'flex', flexDirection: x > 984 ? "null" : 'column', alignItems: x > 984 ? "null" : 'center', paddingBottom: x > 984 ? "null" : "70px" }}>
-                        <h2><b>Invoice Details : </b></h2>
-                        <div style={styles.grandTotalContainer}>
-                            <div>Sub Total:</div>
-                            <div>₹{getTotal().toFixed(2)}</div>
-                        </div>
-                        <div style={styles.grandTotalContainer}>
-                            <div>GST (18%):</div>
-                            <div>₹{(getTotal() * 0.18).toFixed(2)}</div>
-                        </div>
-                        <hr style={{ marginTop: '30px', borderWidth: "3px", borderColor: "black" }} />
-                        <div style={{
-                            marginTop: '40px',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            fontWeight: 'bold',
-                            width: "300px",
-                        }}>
-                            <div>Grand Total:</div>
-                            <div>₹{(getTotal() * 1.18).toFixed(2)}</div>
-                        </div>
-                    </div>
-
-                </div>
-                <button style={styles.checkoutButton} onClick={() => navtopay()}>Proceed to Pay</button>
+          <div>
+            <h2 className="text-2xl font-bold text-sky-900 mb-8">Invoice Details:</h2>
+            <div className="text-gray-700 text-base max-w-md mx-auto space-y-4">
+              <div className="flex justify-between font-normal">
+                <span>Sub Total:</span>
+                <span>₹{getTotal().toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between font-normal">
+                <span>GST (18%):</span>
+                <span>₹{(getTotal() * 0.18).toFixed(2)}</span>
+              </div>
+              <hr className="border-black border-2" />
+              <div className="flex justify-between font-bold text-2xl">
+                <span>Grand Total:</span>
+                <span>₹{(getTotal() * 1.18).toFixed(2)}</span>
+              </div>
             </div>
+          </div>
         </div>
-    );
+
+        <button
+          onClick={navtopay}
+          className="block mx-auto mt-20 px-3 py-2 bg-blue-600 text-white font-semibold text-lg rounded-xl shadow-lg hover:bg-blue-700 transition-colors"
+        >
+          Proceed to Pay
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default ConfirmOrder;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { forgotuserpassword } from './actions/useractions';
+import { forgotuserpassword } from '../actions/useractions';
 const Forgotpassword = () => {
     const [x, setx] = useState(window.innerWidth);
 

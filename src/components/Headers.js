@@ -1,138 +1,307 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import profilepic from "./snap--shop-high-resolution-logo.png";
-import { useState } from 'react';
-import { deleteuser, userlogout } from './actions/useractions';
+import React, { useState, useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { deleteuser, userlogout } from "../actions/useractions";
+import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
 function Headers() {
+  const { checkAuth } = useAuth();
   const dispatch = useDispatch();
-  const headerStyle = {
-    position: 'fixed',
-    top: 0,
-    width: '100%',
-    zIndex: 999,
-    backgroundColor: 'black',
-    opacity: 0.7,
-    color: '#ffffff',
-  };
-
   const { cartitems } = useSelector((state) => state.cart);
-  const { isAuthenticated, user } = useSelector((state) => state.userdetails);
-  const [showMessage, setShowMessage] = useState(false);
+  const { user } = useSelector((state) => state.userdetails);
+  const { isAuthenticated, loading } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
+
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setAccountDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const logout = () => {
-    if (window.confirm("Are you sure you want to log out?")) {
-      localStorage.setItem("cartitem", "");
-      localStorage.setItem("shippingdetails", null);
-      localStorage.removeItem('width');
-      dispatch(userlogout());
-    }
-  }
+    localStorage.removeItem("cartitem");
+    localStorage.removeItem("shippingdetails");
+    localStorage.removeItem("width");
+    dispatch(userlogout());
+    toast.success("Logged out successfully");
+    checkAuth();
+  };
 
   const deleteaccount = () => {
     if (window.confirm("Are you sure you want to DELETE your Account?")) {
-      localStorage.removeItem('width');
+      localStorage.removeItem("width");
       dispatch(deleteuser());
+      checkAuth();
     }
-  }
-
+  };
 
   return (
-    <div style={{ width: "100%" }}>
-      <nav className="navbar navbar-expand-lg navbar-dark" style={headerStyle}>
-        <div className="container-fluid">
-          <Link to="/" className="navbar-brand" style={{ fontSize: "20px" }}>Snap & Shop</Link>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
+    <>
+      {/* NAVBAR */}
+      <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-sky-300 shadow md:py-1.5">
+        <nav className="container mx-auto flex items-center justify-between px-4 py-2 lg:py-3">
+          {/* Logo */}
+          <Link
+            to="/"
+            className="text-2xl font-extrabold tracking-wide text-sky-800 hover:opacity-80"
+          >
+            Snap & Shop
+          </Link>
 
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link to="/Home" className="nav-link" aria-current="page" style={{ fontSize: "15px" }}>Home</Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/products" className="nav-link" style={{ fontSize: "15px" }}>Products</Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/myorders" className="nav-link" style={{ fontSize: "15px" }}>My Orders</Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/search" className="nav-link" style={{ fontSize: "15px" }}>Search<i className="fa-solid fa-magnifying-glass" style={{ fontSize: "17px" }}></i></Link>
-              </li>
+          {/* Desktop Nav */}
+          <ul className="hidden lg:flex items-center space-x-8 font-medium text-sky-700">
+            <li>
+              <Link to="/Home" className="hover:text-sky-900 transition">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/products" className="hover:text-sky-900 transition">
+                Products
+              </Link>
+            </li>
+            <li>
+              <Link to="/myorders" className="hover:text-sky-900 transition">
+                My Orders
+              </Link>
+            </li>
 
-              <li className="nav-item dropdown">
-                <div className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={{ fontSize: "15px" }}>
-                  Your Account<i className="fa-solid fa-user" style={{ fontSize: "15px" }}></i>
-                </div>
-                <ul className="dropdown-menu" style={{ fontSize: "15px", position: 'absolute', top: '100%', left: '0', transform: 'translateY(0)' }}>
+            {/* Account Dropdown */}
+            <li className="relative" ref={dropdownRef}>
+              <button
+                className="flex items-center gap-1 hover:text-sky-900 transition"
+                onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
+              >
+                Your Account <i className="fa-solid fa-user"></i>
+              </button>
+              {accountDropdownOpen && (
+                <ul className="absolute top-10 right-0 w-48 bg-white rounded-xl border border-sky-200 shadow-lg overflow-hidden z-50">
                   {isAuthenticated && user.work === "admin" && (
-                    <li><Link to="/dashboard" className="dropdown-item"><b>Dashboard</b></Link></li>
+                    <li>
+                      <Link
+                        to="/dashboard"
+                        className="block px-5 py-2.5 hover:bg-sky-100 font-semibold text-sky-800"
+                      >
+                        Dashboard
+                      </Link>
+                    </li>
                   )}
-                  {!isAuthenticated ? (
-                    <li><Link to="/login" className="dropdown-item">Log In</Link></li>
-                  ) : null}
-                  <li><Link to="/account" className="dropdown-item">My Account</Link></li>
+                  {!isAuthenticated && (
+                    <li>
+                      <Link
+                        to="/login"
+                        className="block px-5 py-2.5 hover:bg-sky-100"
+                      >
+                        Log In
+                      </Link>
+                    </li>
+                  )}
+                  <li>
+                    <Link
+                      to="/account"
+                      className="block px-5 py-2.5 hover:bg-sky-100"
+                    >
+                      My Account
+                    </Link>
+                  </li>
                   {isAuthenticated && (
                     <>
-                      <li><button className="dropdown-item" onClick={() => logout()}>Log Out</button></li>
-                      <li><button className="dropdown-item" onClick={() => deleteaccount()}>Delete Account</button></li>
+                      <li>
+                        <button
+                          onClick={logout}
+                          className="w-full text-left px-5 py-2.5 hover:bg-gray-100 text-red-600 font-semibold"
+                        >
+                          Log Out
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={deleteaccount}
+                          className="w-full text-left px-5 py-2.5 hover:bg-red-100 text-red-700 font-bold"
+                        >
+                          Delete
+                        </button>
+                      </li>
                     </>
                   )}
                 </ul>
+              )}
+            </li>
+
+            {isAuthenticated && (
+              <li>
+                <Link
+                  to="/mycart"
+                  className="relative flex items-center gap-1 hover:text-sky-900"
+                >
+                  My Cart <i className="fa-solid fa-cart-shopping text-lg"></i>
+                  <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold px-2 rounded-full shadow">
+                    {cartitems?.length || 0}
+                  </span>
+                </Link>
               </li>
-
-
-              <li className="nav-item">
-                {isAuthenticated && (
-                  <li className="nav-item">
-                    <Link to="/mycart" className="nav-link" style={{ fontSize: "15px" }}>
-                      My Cart
-                      <div style={{ position: "relative", display: "inline-block" }}>
-                        <i className="fa-solid fa-cart-shopping" style={{ fontSize: "20px", position: "relative" }}></i>
-                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ width: "17px", height: "17px", fontSize: "10px", display: "flex", justifyContent: "center", alignItems: "center", transform: "translate(-50%, -50%)" }}>
-                          {cartitems !== null && cartitems.length > 0 ? cartitems.length : 0}
-                        </span>
-                      </div>
-                    </Link>
-                  </li>
-                )}
+            )}
+            {isAuthenticated && (
+              <li>
+                <img
+                  src="/img/snapedit_1710434121810.jpeg"
+                  alt="Profile"
+                  className="w-9 h-9 rounded-full border border-sky-200 shadow cursor-pointer"
+                />
               </li>
+            )}
+          </ul>
 
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden p-2 rounded-md hover:bg-sky-100 transition"
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <i className="fa-solid fa-bars text-xl text-sky-700" />
+          </button>
+        </nav>
+      </header>
 
+      {/* MOBILE SIDEBAR + OVERLAY */}
+      {mobileMenuOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-opacity-40 backdrop-blur-sm z-40"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div
+            className={`fixed inset-y-0 left-0 w-80 md:w-96 bg-gradient-to-b from-sky-50 to-white 
+  border-r border-sky-200 shadow-2xl transform transition-transform duration-300 z-50
+  ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-sky-200">
+              <h2 className="text-lg font-bold text-sky-800">Menu</h2>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 hover:bg-sky-100 rounded-full"
+              >
+                <i className="fa-solid fa-xmark text-2xl text-sky-700" />
+              </button>
+            </div>
 
-              <li className="nav-item">
-                {isAuthenticated && (
-                  <>
-                    <img onMouseEnter={() => setShowMessage(true)} onMouseLeave={() => setShowMessage(false)} src={profilepic} alt="Uploaded" style={{ width: "40px", height: "40px", borderRadius: "100%", marginLeft: "10px" }} />
-                    {showMessage && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '100%',
-                          left: "50%",
-                          transform: 'translateX(-50%)',
-                          backgroundColor: '#333',
-                          color: '#fff',
-                          padding: '10px 20px',
-                          whiteSpace: "nowrap",
-                          borderRadius: '5px',
-                          fontSize: "13px",
-                          zIndex: '999',
-                        }}
-                      >
-                        Welcome, {user.username}. You are currently logged in.
-                      </div>
-                    )}
-                  </>
-                )}
+            {/* Nav Links */}
+            <ul className="flex flex-col px-6 py-6 space-y-4 text-sky-800 font-medium">
+              <li>
+                <Link
+                  to="/Home"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-sky-900 flex items-center gap-3"
+                >
+                  <i className="fa-solid fa-house text-sky-600" /> Home
+                </Link>
               </li>
+              <li>
+                <Link
+                  to="/products"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-sky-900 flex items-center gap-3"
+                >
+                  <i className="fa-solid fa-box-open text-sky-600" /> Products
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/myorders"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-sky-900 flex items-center gap-3"
+                >
+                  <i className="fa-solid fa-bag-shopping text-sky-600" /> My Orders
+                </Link>
+              </li>
+              {!isAuthenticated && (
+                <li>
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="hover:text-sky-900 flex items-center gap-3"
+                  >
+                    <i className="fa-solid fa-right-to-bracket text-sky-600" /> Log In
+                  </Link>
+                </li>
+              )}
+              <li>
+                <Link
+                  to="/account"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-sky-900 flex items-center gap-3"
+                >
+                  <i className="fa-solid fa-user-circle text-sky-600" /> My Account
+                </Link>
+              </li>
+              {isAuthenticated && user.work === "admin" && (
+                <li>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="hover:text-sky-900 flex items-center gap-3"
+                  >
+                    <i className="fa-solid fa-chart-line text-sky-600" /> Dashboard
+                  </Link>
+                </li>
+              )}
+              {isAuthenticated && (
+                <li>
+                  <Link
+                    to="/mycart"
+                    className="relative flex items-center gap-3 hover:text-sky-900"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <i className="fa-solid fa-cart-shopping text-sky-600 text-lg"></i>{" "}
+                    My Cart
+                    <span className="absolute left-28 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
+                      {cartitems?.length || 0}
+                    </span>
+                  </Link>
+                </li>
+              )}
             </ul>
+
+            {/* User Info Section */}
+            {isAuthenticated && (
+              <div className="absolute bottom-0 w-full px-6 py-5 bg-sky-50 border-t border-sky-200">
+                <div className="flex items-center gap-3">
+                  <img
+                    src="/img/snapedit_1710434121810.jpeg"
+                    alt="Profile"
+                    className="w-10 h-10 rounded-full border border-sky-200 shadow"
+                  />
+                  <div className="flex-1">
+                    <p className="text-sky-900 font-semibold">{user.username}</p>
+                    <button
+                      onClick={logout}
+                      className="text-sm text-red-600 font-medium hover:underline"
+                    >
+                      Log Out
+                    </button>
+                  </div>
+                </div>
+                <button
+                  onClick={deleteaccount}
+                  className="mt-3 w-full py-2 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-lg"
+                >
+                  Delete Account
+                </button>
+              </div>
+            )}
           </div>
-        </div>
-      </nav>
-    </div>
+        </>
+      )}
+    </>
   );
 }
 

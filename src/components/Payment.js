@@ -1,203 +1,110 @@
-import React, { useState, useEffect } from 'react';
-import backimage from "./snapedit_1711040704089.jpeg";
-import { Link, useNavigate } from 'react-router-dom';
-import { useStripe, CardNumberElement, CardCvcElement, CardExpiryElement, useElements } from '@stripe/react-stripe-js';
-import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { createorder } from './actions/orderactions';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { createorder } from "../actions/orderactions";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const Payment = () => {
-  const [x, setx] = useState(window.innerWidth);
-
-    useEffect(() => {
-        const handleResize = () => setx(window.innerWidth);
-
-        window.addEventListener('resize', handleResize);
-
-        if (localStorage.getItem("width") !== null) {
-            setx(parseInt(localStorage.getItem("width")));
-        } else {
-            setx(window.innerWidth);
-        }
-
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-  const [paymentError, setPaymentError] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const stripe = useStripe();
-  const elements = useElements();
-  const totalprice = Number(localStorage.getItem("totalprice"));
-  const navigate = useNavigate();
+function Payment() {
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const totalmoney = totalprice;
-  const { cartitems } = useSelector((state) => state.cart)
+  const navigate = useNavigate();
+
+  const totalprice = Number(localStorage.getItem("totalprice"));
+  const { cartitems } = useSelector((state) => state.cart);
   const shippingdet = JSON.parse(localStorage.getItem("shippingdetails"));
-
-  const userAddress = {
-    line1: shippingdet.userDetails.address,
-    line2: shippingdet.userDetails.address,
-    city: JSON.parse(localStorage.getItem("shippingdetails")).selectedCity.label,
-    state: JSON.parse(localStorage.getItem("shippingdetails")).selectedState.value,
-    country: "US",
-    postal_code: "125001",
-  };
-
-
-
-  const orderdis = {
-    shippinginfo: {
-      address: shippingdet.userDetails.address,
-      city: JSON.parse(localStorage.getItem("shippingdetails")).selectedCity.label,
-      state: JSON.parse(localStorage.getItem("shippingdetails")).selectedState.value,
-      country: "US",
-      pincode: 125001,
-      phoneno: shippingdet.userDetails.phone,
-    },
-    orderitems: cartitems,
-    paymentInfo: {
-      id: "",
-      status: "succeeded"
-    },
-
-    itemsPrice: (totalprice * 100) / 118,
-    taxPrice: (totalprice * 18) / 118,
-    shippingPrice: 0,
-    totalPrice: totalmoney,
-    orderStatus: "pending"
-  }
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const handlePayment = async (e) => {
-    e.preventDefault();
-    if (window.confirm("Are you sure you want to complete the payment?")) {
-      setIsProcessing(true);
-
-      try {
-        const config = {
-          "Content-Type": "application/json"
-        };
-        const { data } = await axios.post("https://ecommerce-backend-ochre-two.vercel.app/api/v1/payment/process", {
-          description: "Description of the export transaction goes here",
-          amount: Math.round(totalprice * 100),
-        }, config, { withCredentials: true});
-
-        const clientSecret = data.client_secret;
-        const result = await stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card: elements.getElement(CardNumberElement),
-            billing_details: {
-              name: shippingdet.userDetails.name,
-              email: JSON.parse(localStorage.getItem("shippingdetails")).userDetails.email,
-              address: userAddress
-            }
-          }
-        });
-
-        if (result.error) {
-          setPaymentError(result.error.message);
-        } else {
-          if (result.paymentIntent.status === "succeeded") {
-            const paymentId = result.paymentIntent.id;
-            orderdis.paymentInfo.id = paymentId;
-            dispatch(createorder(orderdis));
-            navigate("/success");
-          } else {
-            setPaymentError("There's some issue while processing payment");
-          }
-        }
-      } catch (error) {
-        console.error('Error:', error.message);
-        setPaymentError(error.message);
-      } finally {
-        setIsProcessing(false);
-      }
-    }
-
+  const orderdis = {
+    shippinginfo: {
+      address: shippingdet.userDetails.address,
+      city: shippingdet.selectedCity.label,
+      state: shippingdet.selectedState.value,
+      country: "IN",
+      pincode: 125001,
+      phoneno: shippingdet.userDetails.phone,
+    },
+    orderitems: cartitems,
+    paymentInfo: { id: "", status: "succeeded" },
+    itemsPrice: (totalprice * 100) / 118,
+    taxPrice: (totalprice * 18) / 118,
+    shippingPrice: 0,
+    totalPrice: totalprice,
+    orderStatus: "pending",
   };
-  const cardElementOptions = {
-    style: {
-      base: {
-        fontSize: "25px",
-        color: 'green',
-        '::placeholder': {
-          color: 'gray',
+
+  const handlePayment = async () => {
+    try {
+      setLoading(true);
+
+      // 1. Create order from backend
+      const { data } = await axios.post("http://localhost:4000/api/v1/pay/razorpay", {
+        amount: totalprice,
+      });
+
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        amount: data.order.amount,
+        currency: "INR",
+        name: "Snap & Shop",
+        description: "Complete your order payment",
+        order_id: data.order.id,
+        handler: function (response) {
+          orderdis.paymentInfo.id = response.razorpay_payment_id;
+          dispatch(createorder(orderdis));
+          navigate("/success");
         },
-        textAlign: "center",
-      },
-      invalid: {
-        color: 'red',
-      },
-    },
-  };
-  const styles = {
-    container: {
-      minHeight:'1000px',
-      height: "100%",
-      width: "auto",
-      alignItems: 'center',
-      background: '#f0f0f0',
-      backgroundImage: `url(${backimage})`, backgroundSize: 'cover'
-    },
-    cardForm: {
-      minWidth: "70%",
-      width : "auto",
-      minHeight : x > 743 ? "500px" : "300px",
-      height : "auto",
-      paddingBottom: '20px',
-      borderRadius: '10px',
-      boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-      background: '#fff',
+        prefill: {
+          name: shippingdet.userDetails.name,
+          email: shippingdet.userDetails.email,
+          contact: shippingdet.userDetails.phone,
+        },
+        theme: { color: "#0ea5e9" },
+      };
 
-    },
-    hr2: {
-      borderWidth: "2px",
-      opacity: 0.6,
-      width: "300px",
-      backgroundColor: 'white',
-    borderColor: 'white',
-    },
+      const razor = new window.Razorpay(options);
+      razor.open();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div style={styles.container}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop:  "60px" }}>
-                <Link to="/mycart" style={{ fontSize: x > 1090 ? '25px' : "18px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
-                <hr style={styles.hr2} />
-                <Link style={{ fontSize: x > 1090 ? '25px' : "18px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
-                <hr style={styles.hr2} />
-                <Link style={{ fontSize: x > 1090 ? '25px' : "18px", color: "red", textDecoration: "none", whiteSpace: "nowrap" }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
+    <div className="min-h-screen bg-sky-100 flex flex-col items-center py-24 px-4">
+      <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
+        <Link to="/mycart" className="flex items-center gap-2 text-green-600">
+          <i className="fa-solid fa-cart-shopping"></i>
+          <span className="hidden md:inline">View Cart</span>
+        </Link>
+        <span className=" w-20 h-0.5 bg-gray-400"></span>
+        <span className="flex items-center gap-2 text-green-600">
+          <i className="fa-solid fa-check"></i>
+          <span className="hidden md:inline">Fill Details</span>
+        </span>
+        <span className=" w-20 h-0.5 bg-gray-400"></span>
+        <span className="flex items-center gap-2 opacity-40 text-red-600">
+          <i className="fa-solid fa-circle-check"></i>
+          <span className="hidden md:inline">Payment</span>
+        </span>
       </div>
-      <div style={{ height: x > 743 ? "500px" :"300px", opacity: 0.8, paddingTop: '40px', display: 'flex', justifyContent: 'center'  }}>
-        <div style={styles.cardForm}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-            <div>
-              <h1 style={{ marginTop: '20px', textAlign: 'center', fontSize:"45px"  }}>Card Info.</h1>
-              <b><hr style={{ width:   "200px" , backgroundColor: "black", position: "relative", bottom: "14px" }} /></b>
-            </div>
-          </div>
-          <div style={{ justifyContent: "center", position: "relative", top: "40px"}}>
-            <CardNumberElement options={cardElementOptions} />
-            <CardExpiryElement options={cardElementOptions} />
-            <CardCvcElement options={cardElementOptions} />
-          </div>
-          {paymentError && <div style={{ color: 'red' }}>{paymentError}</div>}
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}>
-            <button onClick={handlePayment} type="button" className="btn btn-warning" style={{ padding: "10px", paddingInline: "40px", fontSize: "20px", position: "relative", top: "80px"  }} disabled={isProcessing}>
-              {isProcessing ? "Processing..." : `Pay ₹${totalprice}`}
-            </button>
-          </div>
-
-        </div>
+      <div className="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full text-center">
+        <h1 className="text-3xl font-bold text-sky-800 mb-6">Complete Payment</h1>
+        <p className="text-lg text-slate-700 mb-6">Pay securely with Razorpay</p>
+        <button
+          onClick={handlePayment}
+          disabled={loading}
+          className="w-full py-3 rounded-xl text-white font-semibold text-lg shadow-md bg-blue-600 hover:bg-blue-700 transition"
+        >
+          {loading ? "Processing..." : `Pay ₹${totalprice}`}
+        </button>
       </div>
     </div>
   );
-};
-
+}
 
 export default Payment;

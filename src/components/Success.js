@@ -1,64 +1,65 @@
-import React from 'react';
-import successful from "./1cbd3594bb5e8d90924a105d4aae924c.gif";
-import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 const Success = () => {
-  const [x, setx] = useState(window.innerWidth);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   useEffect(() => {
-    const handleResize = () => setx(window.innerWidth);
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
 
-    window.addEventListener('resize', handleResize);
+    setScreenWidth(
+      localStorage.getItem("width")
+        ? parseInt(localStorage.getItem("width"))
+        : window.innerWidth
+    );
 
-    if (localStorage.getItem("width") !== null) {
-      setx(parseInt(localStorage.getItem("width")));
-    } else {
-      setx(window.innerWidth);
-    }
-
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  const styles = {
-    container: {
-      minHeight: '900px',
-      height: "auto",
-      width: "100%",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    content: {
-      textAlign: "center",
-      position: "relative",
-    },
-    hr2: {
-      borderWidth: "2px",
-      opacity: 0.6,
-      width: "300px",
-    },
-  };
+
   return (
-    <div style={styles.container}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: '60px' }}>
-        <Link to="/mycart" style={{ fontSize: x > 1090 ? '25px' : "16px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Place Order <i className="fa-solid fa-cart-shopping"></i></Link>
-        <hr style={styles.hr2} />
-        <Link style={{ fontSize: x > 1090 ? '25px' : "16px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Confirm Order <i className="fa-solid fa-check"></i></Link>
-        <hr style={styles.hr2} />
-        <Link style={{ fontSize: x > 1090 ? '25px' : "16px", color: "green", textDecoration: "none", whiteSpace: "nowrap" }}>Payment <i className="fa-solid fa-circle-check"></i></Link>
+    <div className="min-h-screen bg-sky-100 flex flex-col items-center py-24 px-4">
+      {/* Step Tracker */}
+      <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
+        <Link to="/mycart" className="flex items-center gap-2 text-green-600">
+          <i className="fa-solid fa-cart-shopping"></i>
+          <span className="hidden md:inline">View Cart</span>
+        </Link>
+        <span className=" w-20 h-0.5 bg-gray-400"></span>
+        <span className="flex items-center gap-2 text-green-600">
+          <i className="fa-solid fa-check"></i>
+          <span className="hidden md:inline">Fill Details</span>
+        </span>
+        <span className=" w-20 h-0.5 bg-gray-400"></span>
+        <span className="flex items-center gap-2 text-green-600">
+          <i className="fa-solid fa-circle-check"></i>
+          <span className="hidden md:inline">Payment</span>
+        </span>
       </div>
-      <div style={styles.content}>
-        <img src={successful} alt="Animated GIF" style={{ width: x > 800 ? null : "100%", paddingBottom: "50px" }} />
-        <h2 style={{ position: "relative", bottom: "130px" }}>Payment Successful!</h2>
-        <Link style={{ position: "relative", bottom: "115px", fontSize: "22px", textDecoration: "none" }} to="/myorders">See Your Orders...</Link>
+
+      <div className="bg-opacity-90 backdrop-blur-md rounded-3xl p-10 flex flex-col items-center max-w-lg w-full text-center">
+        <img
+          src="/success.gif"
+          alt="Payment success animation"
+          className={`mb-12 ${screenWidth > 800 ? "w-auto max-w-md" : "w-full"}`}
+          loading="lazy"
+        />
+        <h2 className="text-3xl font-bold text-sky-900 mb-6">
+          Payment Successful!
+        </h2>
+        <Link
+          to="/myorders"
+          className="text-xl text-sky-700 font-semibold hover:underline"
+        >
+          See Your Orders...
+        </Link>
       </div>
     </div>
   );
 };
 
-
-
 export default Success;
-

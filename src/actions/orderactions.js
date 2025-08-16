@@ -3,7 +3,7 @@ import { USER_ORDER_REQUEST, USER_ORDER_SUCCESS, USER_ORDER_FAIL, USER_ORDERSTAT
 export const createorder = (order) => async (dispatch, getState) => {
     try {
         dispatch({ type: USER_ORDER_REQUEST })
-        const { data } = await axios.post("https://ecommerce-backend-ochre-two.vercel.app/api/v1/order/create", order, {
+        const { data } = await axios.post("http://localhost:4000/api/v1/ord/order/create", order, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -28,7 +28,7 @@ export const createorder = (order) => async (dispatch, getState) => {
 export const updatestatus = (orderid, orderStatus) => async (dispatch, getState) => {
     try {
         dispatch({ type: USER_ORDERSTAT_REQUEST });
-        const { data } = await axios.put(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/updateorder/${orderid}`, {orderStatus} ,{
+        const { data } = await axios.put(`http://localhost:4000/api/v1/ord/updateorder/${orderid}`, {orderStatus} ,{
             headers: {
               "Content-Type": "application/json",
             },
@@ -53,7 +53,7 @@ export const updatestatus = (orderid, orderStatus) => async (dispatch, getState)
 export const usersallorders = () => async(dispatch) => {
     try {
         dispatch({ type: USERS_ALLORDERS_REQUEST })
-        const { data } = await axios.get("https://ecommerce-backend-ochre-two.vercel.app/api/v1/getallmyorders", { withCredentials: true})
+        const { data } = await axios.get("http://localhost:4000/api/v1/ord/getallmyorders", { withCredentials: true})
         dispatch({
             type: USERS_ALLORDERS_SUCCESS,
             payload: data
@@ -70,7 +70,7 @@ export const usersallorders = () => async(dispatch) => {
 export const getallorders = () => async (dispatch, getState) => {
     try {
         dispatch({ type: ALL_ORDERS_REQUEST })
-        const { data } = await axios.get("https://ecommerce-backend-ochre-two.vercel.app/api/v1/allorders", { withCredentials: true})
+        const { data } = await axios.get("http://localhost:4000/api/v1/ord/allorders", { withCredentials: true})
         dispatch({
             type: ALL_ORDERS_SUCCESS,
             payload: data

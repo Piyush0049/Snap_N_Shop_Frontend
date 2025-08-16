@@ -2,7 +2,7 @@ import axios from "axios";
 import { ADD_TO_CART, REMOVE_FROM_CART } from "../constants/cartconstants";
 
 export const addtocart = (id, quantity, userid) => async (dispatch, getState) => {
-    const { data } = await axios.get(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/product/${id}`, { withCredentials: true});
+    const { data } = await axios.get(`http://localhost:4000/api/v1/prod/product/${id}`, { withCredentials: true});
     dispatch({
         type: ADD_TO_CART, 
         payload: {
@@ -20,7 +20,7 @@ export const addtocart = (id, quantity, userid) => async (dispatch, getState) =>
 };
 
 export const removefromcart = (id, quantity, userid) => async (dispatch, getState) => {
-    const { data } = await axios.get(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/product/${id}`, { withCredentials: true});
+    const { data } = await axios.get(`http://localhost:4000/api/v1/prod/product/${id}`, { withCredentials: true});
     dispatch({
         type: REMOVE_FROM_CART,
         payload: {
