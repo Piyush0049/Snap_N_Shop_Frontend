@@ -78,7 +78,7 @@ const Dashboard = () => {
     }
     if (w === "admin") {
       await axios.put(
-        "http://localhost:4000/auth/changerole",
+        "https://ecommerce-backend-ochre-two.vercel.app/auth/changerole",
         { email: e, work: "user" },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
@@ -86,7 +86,7 @@ const Dashboard = () => {
     }
     if (w === "user") {
       await axios.put(
-        "http://localhost:4000/auth/changerole",
+        "https://ecommerce-backend-ochre-two.vercel.app/auth/changerole",
         { email: e, work: "admin" },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
@@ -116,7 +116,7 @@ const Dashboard = () => {
 
   const deleteprod = async (id) => {
     if (window.confirm("Are you sure want to delete the product?")) {
-      await axios.delete(`http://localhost:4000/api/v1/prod/product/${id}`, {
+      await axios.delete(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/prod/product/${id}`, {
         withCredentials: true,
       });
       toast.success("Product has been deleted successfully!");
@@ -146,7 +146,7 @@ const Dashboard = () => {
     if (!editedProduct) return;
     toast.success("Product has been updated successfully!");
     await axios.put(
-      `http://localhost:4000/api/v1/prod/product/${editedProduct._id}`,
+      `https://ecommerce-backend-ochre-two.vercel.app/api/v1/prod/product/${editedProduct._id}`,
       {
         name: editedProduct.name,
         description: editedProduct.description,
@@ -167,7 +167,7 @@ const Dashboard = () => {
       e.preventDefault();
       try {
         await axios.post(
-          "http://localhost:4000/api/v1/prod/product/create",
+          "https://ecommerce-backend-ochre-two.vercel.app/api/v1/prod/product/create",
           {
             name: newproduct.name,
             description: newproduct.description,

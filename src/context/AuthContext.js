@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     setLoading(true); // reset loading before check
     try {
-      const { data } = await axios.get("http://localhost:4000/auth/me", {
+      const { data } = await axios.get("https://ecommerce-backend-ochre-two.vercel.app/auth/me", {
         withCredentials: true,
       });
       setIsAuthenticated(data.success);
