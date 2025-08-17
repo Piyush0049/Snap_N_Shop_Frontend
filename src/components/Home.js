@@ -66,7 +66,6 @@ function Home() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-sky-50 via-white to-cyan-50 flex flex-col">
-      {/* HERO SECTION */}
       <section className="relative flex flex-col justify-center items-center min-h-[600px] pt-24 pb-16 overflow-hidden">
         {/* Background Animated Shapes */}
         <div className="absolute inset-0 bg-gradient-to-r from-sky-100 via-cyan-100 to-teal-100 animate-gradient-x opacity-40" />
