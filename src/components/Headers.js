@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 import { deleteuser, userlogout } from "../actions/useractions";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Headers() {
+  const navigate = useNavigate();
   const { checkAuth } = useAuth();
   const dispatch = useDispatch();
   const { cartitems } = useSelector((state) => state.cart);
@@ -34,6 +36,7 @@ function Headers() {
     dispatch(userlogout());
     toast.success("Logged out successfully");
     checkAuth();
+    navigate("/login");
   };
 
   const deleteaccount = () => {

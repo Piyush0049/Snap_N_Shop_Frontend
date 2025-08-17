@@ -96,10 +96,8 @@ const MyCart = () => {
                     className="w-24 h-24 rounded-lg object-cover"
                   />
 
-                  {/* Product Details */}
                   <div className="flex-1">
                     <h3 className="text-lg font-bold">{p.name}</h3>
-                    <p className="text-gray-600">Price: ₹{p.price}</p>
                     <p className="text-gray-600">Total: ₹{p.price * p.quantity}</p>
                   </div>
 

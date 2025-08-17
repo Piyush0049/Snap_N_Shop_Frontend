@@ -5,6 +5,10 @@ import { userlogin, usersignup } from '../actions/useractions';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
+import { googleLogin } from '../actions/useractions';
+// import {jwt_decode} from 'jwt-decode';
 
 const LoginPage = () => {
   const { checkAuth } = useAuth();
@@ -39,19 +43,16 @@ const LoginPage = () => {
     try {
       if (loginMode === "login") {
         const res = await dispatch(userlogin(email, password));
-        console.log(res)
         if (res?.success) {
           toast.success("Login successful!");
           navigate("/home");
         } else {
           toast.error(res?.message || "Login failed!");
         }
-
       } else if (loginMode === "signup") {
         if (password === cpassword) {
           const myForm = { username, email, password };
           const res = await dispatch(usersignup(myForm));
-
           if (res?.success) {
             toast.success("Signup successful!");
             navigate("/home");
@@ -70,6 +71,27 @@ const LoginPage = () => {
       toast.error("Something went wrong!");
     }
   };
+
+  const handleGoogleLogin = async (credentialResponse) => {
+  try {
+    // send the raw credential (token) instead of decoded object
+    const res = await dispatch(googleLogin(credentialResponse.credential));
+
+    if (res?.success) {
+      toast.success("Logged in with Google!");
+      navigate("/home");
+    } else {
+      toast.error(res?.message || "Google login failed!");
+    }
+
+    checkAuth();
+  } catch (err) {
+    console.error("Google login error:", err);
+    toast.error("Google login failed!");
+  }
+};
+
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 px-4">
@@ -172,6 +194,14 @@ const LoginPage = () => {
             {loginMode === "login" ? "Login" : "Sign Up"}
           </button>
         </form>
+
+        {/* 🔹 Google Login Button */}
+        <div className="mt-4 flex justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleLogin}
+            onError={() => toast.error("Google login failed!")}
+          />
+        </div>
 
         <div className="mt-6 text-center text-sm text-gray-600">
           {loginMode === "login" ? (

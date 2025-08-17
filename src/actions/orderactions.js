@@ -1,9 +1,12 @@
 import axios from "axios";
 import { USER_ORDER_REQUEST, USER_ORDER_SUCCESS, USER_ORDER_FAIL, USER_ORDERSTAT_REQUEST, USER_ORDERSTAT_SUCCESS, USER_ORDERSTAT_FAIL, ALL_ORDERS_FAIL, ALL_ORDERS_REQUEST, ALL_ORDERS_SUCCESS, USERS_ALLORDERS_REQUEST ,USERS_ALLORDERS_SUCCESS,USERS_ALLORDERS_FAIL  } from "../constants/orderconstants";
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 export const createorder = (order) => async (dispatch, getState) => {
     try {
         dispatch({ type: USER_ORDER_REQUEST })
-        const { data } = await axios.post("https://ecommerce-backend-ochre-two.vercel.app/api/v1/ord/order/create", order, {
+        const { data } = await axios.post(`${API_BASE_URL}/api/v1/ord/order/create`, order, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -28,7 +31,7 @@ export const createorder = (order) => async (dispatch, getState) => {
 export const updatestatus = (orderid, orderStatus) => async (dispatch, getState) => {
     try {
         dispatch({ type: USER_ORDERSTAT_REQUEST });
-        const { data } = await axios.put(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/ord/updateorder/${orderid}`, {orderStatus} ,{
+        const { data } = await axios.put(`${API_BASE_URL}/api/v1/ord/updateorder/${orderid}`, {orderStatus} ,{
             headers: {
               "Content-Type": "application/json",
             },
@@ -53,7 +56,7 @@ export const updatestatus = (orderid, orderStatus) => async (dispatch, getState)
 export const usersallorders = () => async(dispatch) => {
     try {
         dispatch({ type: USERS_ALLORDERS_REQUEST })
-        const { data } = await axios.get("https://ecommerce-backend-ochre-two.vercel.app/api/v1/ord/getallmyorders", { withCredentials: true})
+        const { data } = await axios.get(`${API_BASE_URL}/api/v1/ord/getallmyorders`, { withCredentials: true})
         dispatch({
             type: USERS_ALLORDERS_SUCCESS,
             payload: data
@@ -70,7 +73,7 @@ export const usersallorders = () => async(dispatch) => {
 export const getallorders = () => async (dispatch, getState) => {
     try {
         dispatch({ type: ALL_ORDERS_REQUEST })
-        const { data } = await axios.get("https://ecommerce-backend-ochre-two.vercel.app/api/v1/ord/allorders", { withCredentials: true})
+        const { data } = await axios.get(`${API_BASE_URL}/api/v1/ord/allorders`, { withCredentials: true})
         dispatch({
             type: ALL_ORDERS_SUCCESS,
             payload: data

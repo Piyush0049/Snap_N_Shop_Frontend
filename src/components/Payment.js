@@ -41,7 +41,7 @@ function Payment() {
       setLoading(true);
 
       // 1. Create order from backend
-      const { data } = await axios.post("https://ecommerce-backend-ochre-two.vercel.app/api/v1/pay/razorpay", {
+      const { data } = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/pay/razorpay`, {
         amount: totalprice,
       });
 

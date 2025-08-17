@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
@@ -12,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     setLoading(true); // reset loading before check
     try {
-      const { data } = await axios.get("https://ecommerce-backend-ochre-two.vercel.app/auth/me", {
+      const { data } = await axios.get(`${API_BASE_URL}/auth/me`, {
         withCredentials: true,
       });
       setIsAuthenticated(data.success);

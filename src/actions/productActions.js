@@ -1,12 +1,14 @@
 import axios from "axios"
 import { ALL_PRODUCT_FAIL, ALL_PRODUCT_SUCCESS, ALL_PRODUCT_REQUEST, CLEAR_ALL_ERRORS, PRODUCT_DETAIL_REQUEST, PRODUCT_DETAIL_FAIL, PRODUCT_DETAIL_SUCCESS, PRODUCT_REVIEW_REQUEST, PRODUCT_REVIEW_SUCCESS, PRODUCT_REVIEW_FAIL, PRODUCT_UPDATE_FAIL, PRODUCT_UPDATE_REQUEST, PRODUCT_UPDATE_SUCCESS } from "../constants/productConstants"
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 export const allproducts = (keyword = "", page = "", gt = 0, lt = 50000, categ = "") => async (dispatch) => {
     try {
         dispatch({ type: ALL_PRODUCT_REQUEST })
-        let link = `https://ecommerce-backend-ochre-two.vercel.app/api/v1/prod/products?keyword=${keyword}&page=${page}&price[gt]=${gt}&price[lt]=${lt}`;
+        let link = `${API_BASE_URL}/api/v1/prod/products?keyword=${keyword}&page=${page}&price[gt]=${gt}&price[lt]=${lt}`;
         if (categ) {
-            link = `https://ecommerce-backend-ochre-two.vercel.app/api/v1/prod/products?keyword=${keyword}&page=${page}&price[gt]=${gt}&price[lt]=${lt}&category=${categ}`;
+            link = `${API_BASE_URL}/api/v1/prod/products?keyword=${keyword}&page=${page}&price[gt]=${gt}&price[lt]=${lt}&category=${categ}`;
         }
         const { data } = await axios.get(link, { withCredentials: true});
         dispatch({
@@ -31,7 +33,7 @@ export const resolveerror = async (dispatch) => {
 export const productdetails = (id) => async (dispatch) => {
     try {
         dispatch({ type: PRODUCT_DETAIL_REQUEST })
-        const { data } = await axios.get(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/prod/product/${id}`, { withCredentials: true});
+        const { data } = await axios.get(`${API_BASE_URL}/api/v1/prod/product/${id}`, { withCredentials: true});
         dispatch({
             type: PRODUCT_DETAIL_SUCCESS,
             payload: data.product
@@ -49,7 +51,7 @@ export const productdetails = (id) => async (dispatch) => {
 export const productreview = (productid, rating, comment) => async (dispatch) => {
     try {
         dispatch({ type: PRODUCT_REVIEW_REQUEST })
-        const { data } = await axios.post("https://ecommerce-backend-ochre-two.vercel.app/api/v1/prod/product/addreview", { productid, rating, comment }, {
+        const { data } = await axios.post(`${API_BASE_URL}/api/v1/prod/product/addreview`, { productid, rating, comment }, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -71,7 +73,7 @@ export const productreview = (productid, rating, comment) => async (dispatch) =>
 export const updateproduct = (id, n, d, p, c, s, u) => async (dispatch) => {
     try {
         dispatch({ type: PRODUCT_UPDATE_REQUEST })
-        const { data } = await axios.put(`https://ecommerce-backend-ochre-two.vercel.app/api/v1/prod/product/${id}`, {
+        const { data } = await axios.put(`${API_BASE_URL}/api/v1/prod/product/${id}`, {
             name: n, description: d, price: p, category: c, stock: s, images: {
                 public_id: "public",
                 url: u
