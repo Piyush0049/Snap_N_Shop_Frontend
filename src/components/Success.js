@@ -23,7 +23,6 @@ const Success = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center py-24 px-4">
-      {/* Step Tracker */}
       <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
         <Link to="/mycart" className="flex items-center gap-2 text-green-600">
           <i className="fa-solid fa-cart-shopping"></i>
