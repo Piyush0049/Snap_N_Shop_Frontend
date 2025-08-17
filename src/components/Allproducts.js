@@ -42,7 +42,6 @@ function Allproducts() {
   const handleChange = (event, newValue) => setRange(newValue);
   const onClickcateg = (e) => setcateg(e.target.innerText);
 
-  // Filter Sidebar Content
   const FilterContent = () => (
     <div className="bg-white rounded-2xl shadow-lg p-6 w-full lg:w-72 h-fit border border-gray-200">
       <Typography
