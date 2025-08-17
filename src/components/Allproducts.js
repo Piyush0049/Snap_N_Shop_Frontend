@@ -75,7 +75,7 @@ function Allproducts() {
         </h5>
         <ul className="space-y-2">
           {[
-            "None", // 👈 Added this
+            "None",
             "Machine",
             "Device",
             "Accessories",
