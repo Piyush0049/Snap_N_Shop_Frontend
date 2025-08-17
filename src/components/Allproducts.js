@@ -13,7 +13,7 @@ function Allproducts() {
   const [categ, setcateg] = useState("");
   const [range, setRange] = useState([0, 90000]);
   const [pagenum, setPagenum] = useState("");
-  const [filterOpen, setFilterOpen] = useState(false); // modal toggle
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const dispatch = useDispatch();
   const params = useParams();
