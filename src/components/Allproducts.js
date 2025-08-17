@@ -69,8 +69,6 @@ function Allproducts() {
         }}
       />
 
-      {/* Categories */}
-      {/* Categories */}
       <div className="mt-6">
         <h5 className="text-xl font-bold mb-3 flex items-center gap-2 text-gray-900">
           <i className="fa-solid fa-list"></i> Categories
