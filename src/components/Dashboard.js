@@ -192,7 +192,7 @@ const Dashboard = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       {work === "admin" ? (
-        <div className="max-w-7xl mx-auto p-24">
+        <div className="max-w-7xl mx-auto pb-5 pt-24 sm:p-24">
           <header className="mb-10">
             <nav>
               <ul className="flex justify-center space-x-12 text-lg font-mono text-gray-600">
@@ -232,16 +232,16 @@ const Dashboard = () => {
 
           {/* Dashboard Content */}
           {opt === "" && (
-            <div className="flex items-center justify-center h-[460px] bg-white rounded-xl shadow">
+            <div className="flex items-center justify-center h-[460px] bg-white rounded-xl shadow-sm">
               <h2 className={`font-bold text-center ${x > 536 ? "text-5xl" : "text-3xl"}`}>
-                Welcome, ADMIN!
+                Welcome!
               </h2>
             </div>
           )}
 
           {/* Orders */}
           {opt === "orders" && orderdets.length > 0 && (
-            <div className="space-y-6 max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow">
+            <div className="space-y-6 max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg -sm">
               {orderdets.map((order) => (
                 <div
                   key={order._id}
@@ -268,7 +268,7 @@ const Dashboard = () => {
                         key={i}
                         src={item.image}
                         alt={item.name}
-                        className="w-20 h-20 object-cover rounded-md shadow"
+                        className="w-20 h-20 object-cover rounded-md shadow-sm hidden sm:block"
                       />
                     ))}
                   </div>
@@ -279,7 +279,7 @@ const Dashboard = () => {
 
           {/* Single Order */}
           {opt === "theorder" && selectedorder && (
-            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow space-y-8">
+            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg space-y-8">
               <h2 className="text-2xl font-bold">Order Summary:</h2>
               <div className="flex justify-between font-semibold">
                 <div>Placed On:</div>
@@ -365,7 +365,7 @@ const Dashboard = () => {
                 </select>
                 <button
                   onClick={update}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-6 py-2 rounded-lg transition-shadow shadow-md"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-6 py-2 rounded-lg transition-shadow shadow-sm"
                 >
                   Update Status
                 </button>
@@ -375,11 +375,11 @@ const Dashboard = () => {
 
           {/* Products List */}
           {opt === "products" && (
-            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow space-y-6">
+            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow-sm space-y-6">
               <div className="flex justify-center mb-6">
                 <button
                   onClick={() => setopt("createproduct")}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg shadow-sm transition"
                 >
                   Create New Product
                 </button>
@@ -387,17 +387,17 @@ const Dashboard = () => {
               {allProducts.map((product) => (
                 <div
                   key={product._id}
-                  className="flex items-center space-x-6 p-4 border rounded-lg shadow-sm"
+                  className="flex items-center space-x-6 p-2 sm:p-4 border rounded-lg shadow-sm"
                 >
                   <img
                     src={product.images[0].url}
                     alt={product.name}
-                    className="w-24 h-24 rounded object-cover"
+                    className="w-24 h-24 rounded object-cover hidden sm:block"
                   />
                   <div className="flex-grow">
                     <h3 className="font-semibold text-lg">{product.name}</h3>
                     <p className="text-gray-700">ID: {product._id}</p>
-                    <p className="text-gray-600">{product.description}</p>
+                    <p className="text-gray-600 hidden sm:block">{product.description.substring(0, 100)}<b> ...</b></p>
                     <p className="text-gray-600">
                       Stock: <span className="font-semibold">{product.stock}</span>
                     </p>
@@ -414,13 +414,13 @@ const Dashboard = () => {
                         settheproduct(allProducts.filter((prod) => prod._id === product._id));
                         thepro();
                       }}
-                      className="bg-green-600 hover:bg-green-700 text-white rounded px-4 py-2 font-semibold shadow transition"
+                      className="bg-green-600 hover:bg-green-700 text-white rounded px-2 sm:px-4 py-1 sm:py-2 font-semibold shadow-sm transition"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => deleteprod(product._id)}
-                      className="bg-red-600 hover:bg-red-700 text-white rounded px-4 py-2 font-semibold shadow transition"
+                      className="bg-red-600 hover:bg-red-700 text-white rounded px-2 sm:px-4 py-1 sm:py-2 font-semibold shadow-sm transition"
                     >
                       Delete
                     </button>
@@ -432,7 +432,7 @@ const Dashboard = () => {
 
           {/* Create Product */}
           {opt === "createproduct" && (
-            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow flex flex-col items-center">
+            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg flex flex-col items-center">
               <h2 className="text-2xl font-bold mb-6">Create New Product:</h2>
               <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
                 <label className="block font-semibold text-gray-700">Name</label>
@@ -516,7 +516,7 @@ const Dashboard = () => {
 
           {/* Edit Product */}
           {opt === "theproduct" && editedProduct && (
-            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow flex flex-col items-center">
+            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg flex flex-col items-center">
               <h2 className="text-2xl font-bold mb-6">Edit Product Details:</h2>
               <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
                 <img
@@ -613,15 +613,15 @@ const Dashboard = () => {
 
           {/* Users List */}
           {opt === "customers" && (
-            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow">
+            <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow-sm">
               <ul className="space-y-4">
                 {allUsers.map((user) => (
                   <li
                     key={user._id}
-                    className="flex items-center justify-between p-4 shadow rounded bg-gray-50"
+                    className="flex items-center justify-between p-2 sm:p-4  rounded bg-gray-50"
                   >
                     <div>
-                      <h3 className="text-xl font-semibold mb-1">UserName: {user.username}</h3>
+                      <h3 className="text-xl font-semibold mb-1">User: {user.username}</h3>
                       <p className="text-gray-700">
                         UserID: <span className="font-semibold">{user._id}</span>
                       </p>
@@ -630,9 +630,9 @@ const Dashboard = () => {
                     </div>
                     <button
                       onClick={() => changeroles(user.work, user.email)}
-                      className="bg-green-600 hover:bg-green-700 text-white font-bold px-5 py-2 rounded shadow transition"
+                      className="bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-2 rounded transition"
                     >
-                      Switch Role
+                      Switch
                     </button>
                   </li>
                 ))}

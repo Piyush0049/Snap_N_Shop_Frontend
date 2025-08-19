@@ -129,7 +129,7 @@ const LocationSelector = () => {
       </div>
 
       {/* Form Container */}
-      <div className="bg-white bg-opacity-90 shadow-xl rounded-xl max-w-3xl mx-auto p-8">
+      <div className="bg-white bg-opacity-90 shadow-sm rounded-xl max-w-3xl mx-auto p-8">
         <h2 className="text-2xl font-bold text-center mb-8 text-sky-900">
           Add Shipping Details
         </h2>

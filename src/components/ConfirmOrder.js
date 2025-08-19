@@ -56,7 +56,7 @@ const ConfirmOrder = () => {
         </span>
       </div>
 
-      <div className="bg-white bg-opacity-90 rounded-xl shadow-lg max-w-6xl mx-auto p-10">
+      <div className="bg-white bg-opacity-90 rounded-xl shadow-sm max-w-6xl mx-auto p-10">
         <h1 className="text-center text-3xl font-extrabold mb-16 text-sky-900 leading-relaxed">
           Order Summary
         </h1>

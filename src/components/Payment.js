@@ -92,7 +92,7 @@ function Payment() {
           <span className="hidden md:inline">Payment</span>
         </span>
       </div>
-      <div className="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full text-center">
+      <div className="bg-white rounded-2xl shadow-sm p-10 max-w-md w-full text-center">
         <h1 className="text-3xl font-bold text-sky-800 mb-6">Complete Payment</h1>
         <p className="text-lg text-slate-700 mb-6">Pay securely with Razorpay</p>
         <button

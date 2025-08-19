@@ -50,7 +50,7 @@ function Headers() {
   return (
     <>
       {/* NAVBAR */}
-      <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-sky-300 shadow md:py-1.5">
+      <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-sky-300 shadow-sm md:py-1.5">
         <nav className="container mx-auto flex items-center justify-between px-4 py-2 lg:py-3">
           {/* Logo */}
           <Link

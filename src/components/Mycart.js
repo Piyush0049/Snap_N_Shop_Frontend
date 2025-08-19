@@ -70,7 +70,7 @@ const MyCart = () => {
 
 
       {/* Cart Container */}
-      <div className="bg-white shadow-lg rounded-xl p-6 max-w-5xl mx-auto">
+      <div className="bg-white shadow-sm rounded-xl p-6 max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8 text-sky-900">
           Your Cart
         </h1>
