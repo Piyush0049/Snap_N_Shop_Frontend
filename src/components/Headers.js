@@ -29,16 +29,14 @@ function Headers() {
     };
   }, []);
 
-  const logout = async() => {
+  const logout = () => {
     localStorage.removeItem("cartitem");
     localStorage.removeItem("shippingdetails");
     localStorage.removeItem("width");
-    await dispatch(userlogout());
+    dispatch(userlogout());
     toast.success("Logged out successfully");
-
-    setTimeout(() => {
-      window.location.href = "/login"; // refresh + navigate
-    }, 1500); // wait for toast to be visible
+    checkAuth();
+    navigate("/login");
   };
 
   const deleteaccount = () => {
