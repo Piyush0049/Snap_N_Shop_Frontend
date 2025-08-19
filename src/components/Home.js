@@ -66,7 +66,7 @@ function Home() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-sky-50 via-white to-cyan-50 flex flex-col">
-      <section className="relative flex flex-col justify-center items-center min-h-[600px] pt-24 pb-16 overflow-hidden">
+      <section className="relative flex flex-col justify-center items-center min-h-screen pt-24 pb-16 overflow-hidden">
         {/* Background Animated Shapes */}
         <div className="absolute inset-0 bg-gradient-to-r from-sky-100 via-cyan-100 to-teal-100 animate-gradient-x opacity-40" />
         <div className="absolute -top-24 -left-24 w-80 h-80 bg-sky-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
@@ -151,7 +151,7 @@ function Home() {
           {products && products.slice(0, 4).map((prod, i) => (
             <motion.div
               key={prod._id}
-              className="bg-white rounded-xl shadow-sm hover:shadow-2xl p-5 flex flex-col"
+              className="bg-white rounded-xl shadow-sm hover:shadow-2xl p-3 flex flex-col"
               whileHover={{ scale: 1.05 }}
             >
               <img src={prod.images[0].url} alt={prod.name} className="rounded-lg h-48 w-full object-cover mb-4" />

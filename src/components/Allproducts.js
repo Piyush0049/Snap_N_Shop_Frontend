@@ -44,12 +44,7 @@ function Allproducts() {
 
   const FilterContent = () => (
     <div className="bg-white rounded-2xl shadow-lg p-6 w-full lg:w-72 h-fit border border-gray-200">
-      <Typography
-        gutterBottom
-        className="text-lg font-bold flex items-center gap-2 mb-4 text-gray-900"
-      >
-        <i className="fa-solid fa-filter"></i> Filter by Price
-      </Typography>
+      
       <Slider
         value={range}
         onChange={handleChange}
@@ -79,8 +74,6 @@ function Allproducts() {
             "Machine",
             "Device",
             "Accessories",
-            "Top",
-            "Bottom",
             "Footwear",
           ].map((cat) => (
             <li
@@ -112,7 +105,7 @@ function Allproducts() {
           {/* Filter Button for Small Screens */}
           <button
             onClick={() => setFilterOpen(true)}
-            className="lg:hidden flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+            className=" flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
           >
             <i className="fa-solid fa-sliders"></i> Filters
           </button>
@@ -121,13 +114,13 @@ function Allproducts() {
         {/* Content */}
         <div className="flex flex-col lg:flex-row gap-8 px-6 lg:px-12 py-12">
           {/* Sidebar for Large Screens */}
-          <aside className="hidden lg:block">
+          {/* <aside className="hidden lg:block">
             <FilterContent />
-          </aside>
+          </aside> */}
 
           {/* Products Grid */}
           {/* Products Grid */}
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products &&
               products.map((product, index) => (
                 <div key={index} className="flex justify-center">
@@ -152,7 +145,7 @@ function Allproducts() {
       </div>
 
       {/* Modal for Filters on Mobile */}
-      <Dialog open={filterOpen} onClose={() => setFilterOpen(false)} fullWidth>
+      <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-800">Filters</h2>
