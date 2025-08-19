@@ -29,11 +29,11 @@ function Headers() {
     };
   }, []);
 
-  const logout = () => {
+  const logout = async() => {
     localStorage.removeItem("cartitem");
     localStorage.removeItem("shippingdetails");
     localStorage.removeItem("width");
-    dispatch(userlogout());
+    await dispatch(userlogout());
     toast.success("Logged out successfully");
 
     setTimeout(() => {
