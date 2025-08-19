@@ -35,8 +35,10 @@ function Headers() {
     localStorage.removeItem("width");
     dispatch(userlogout());
     toast.success("Logged out successfully");
-    checkAuth();
-    navigate("/login");
+
+    setTimeout(() => {
+      window.location.href = "/login"; // refresh + navigate
+    }, 1500); // wait for toast to be visible
   };
 
   const deleteaccount = () => {
