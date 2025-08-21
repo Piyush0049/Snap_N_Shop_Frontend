@@ -98,11 +98,6 @@ function Allproducts() {
       <div className="min-h-screen w-full bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200">
         {/* Heading */}
         <div className="flex justify-end items-center px-6 md:px-12 pt-20">
-          {/* <h3 className="text-black text-2xl md:text-4xl font-bold md:font-extrabold drop-shadow-md tracking-wide">
-            All Products
-          </h3> */}
-
-          {/* Filter Button for Small Screens */}
           <button
             onClick={() => setFilterOpen(true)}
             className=" flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
