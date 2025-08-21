@@ -96,7 +96,6 @@ function Allproducts() {
   return (
     <Fragment>
       <div className="min-h-screen w-full bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200">
-        {/* Heading */}
         <div className="flex justify-end items-center px-6 md:px-12 pt-20">
           <button
             onClick={() => setFilterOpen(true)}
