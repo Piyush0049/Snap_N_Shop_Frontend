@@ -49,7 +49,7 @@ const MyCart = () => {
   };
 
   return (
-    <div className="bg-sky-100 min-h-screen py-24 md:py-24 px-4">
+    <div className="bg-sky-100 min-h-screen py-24 md:py-24 sm:px-4">
       {/* Step Tracker */}
       <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
         <Link to="/mycart" className="flex items-center gap-2">
@@ -71,7 +71,7 @@ const MyCart = () => {
 
       {/* Cart Container */}
       <div className="bg-white shadow-sm rounded-xl p-6 max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8 text-sky-900">
+        <h1 className="text-2xl sm:text-3xl font-bold text-center mb-8 text-sky-900">
           Your Cart
         </h1>
 
@@ -87,7 +87,7 @@ const MyCart = () => {
               {cartitems.map((p) => (
                 <div
                   key={p.product}
-                  className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm"
+                  className="flex flex-row items-center gap-4 sm:p-4 sm:border sm:border-sky-200 rounded-md"
                 >
                   {/* Product Image */}
                   <img
@@ -98,37 +98,40 @@ const MyCart = () => {
 
                   <div className="flex-1">
                     <h3 className="text-lg font-bold">{p.name}</h3>
-                    <p className="text-gray-600">Total: ₹{p.price * p.quantity}</p>
+                    <p className="text-gray-600">₹{p.price * p.quantity}</p>
                   </div>
 
                   {/* Quantity Controls */}
-                  <div className="flex items-center">
-                    <button
-                      onClick={() => decreaseQuant(p.product, p.quantity)}
-                      className="bg-sky-400 hover:bg-sky-500 text-white px-3 py-1 rounded-l"
-                    >
-                      -
-                    </button>
-                    <span className="px-4 py-1 font-bold">{p.quantity}</span>
-                    <button
-                      onClick={() =>
-                        increaseQuant(p.product, p.quantity, p.stock)
-                      }
-                      disabled={p.quantity === p.stock}
-                      className={`px-3 py-1 rounded-r ${p.quantity === p.stock
-                        ? "bg-gray-300 text-gray-100 cursor-not-allowed"
-                        : "bg-sky-400 hover:bg-sky-500 text-white"
-                        }`}
-                    >
-                      +
-                    </button>
-                  </div>
 
-                  {/* Delete Icon */}
-                  <i
-                    className="fa-solid fa-trash text-gray-500 hover:text-red-500 cursor-pointer"
-                    onClick={() => deleteprod(p.product, p.quantity, p.stock)}
-                  ></i>
+                  <div className="flex flex-col gap-3 items-end justify-center">
+                    <div className="flex items-center">
+                      <button
+                        onClick={() => decreaseQuant(p.product, p.quantity)}
+                        className="bg-sky-400 hover:bg-sky-500 text-white px-2 rounded-l"
+                      >
+                        -
+                      </button>
+                      <span className="px-3 sm:px-4 py-1 font-bold">{p.quantity}</span>
+                      <button
+                        onClick={() =>
+                          increaseQuant(p.product, p.quantity, p.stock)
+                        }
+                        disabled={p.quantity === p.stock}
+                        className={`px-2 rounded-r ${p.quantity === p.stock
+                          ? "bg-gray-300 text-gray-100 cursor-not-allowed"
+                          : "bg-sky-400 hover:bg-sky-500 text-white"
+                          }`}
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    {/* Delete Icon */}
+                    <i
+                      className="fa-solid fa-trash text-gray-500 hover:text-red-500 cursor-pointer"
+                      onClick={() => deleteprod(p.product, p.quantity, p.stock)}
+                    ></i>
+                  </div>
                 </div>
               ))}
             </div>
@@ -142,9 +145,9 @@ const MyCart = () => {
             <div className="flex justify-center mt-6">
               <button
                 onClick={navtoship}
-                className="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-8 py-3 rounded-lg shadow-md"
+                className="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-2 sm:px-8 sm:py-3 rounded-lg shadow-md"
               >
-                Proceed to Checkout
+                Proceed
               </button>
             </div>
           </>

@@ -109,7 +109,7 @@ const LocationSelector = () => {
     userDetails.address;
 
   return (
-    <div className="bg-sky-100 min-h-screen py-24 md:py-20 px-4">
+    <div className="bg-sky-100 min-h-screen py-24 md:py-20 sm:px-4">
       {/* Step Tracker */}
       <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
         <Link to="/mycart" className="flex items-center gap-2 text-green-600">
@@ -129,7 +129,7 @@ const LocationSelector = () => {
       </div>
 
       {/* Form Container */}
-      <div className="bg-white bg-opacity-90 shadow-sm rounded-xl max-w-3xl mx-auto p-8">
+      <div className="bg-white bg-opacity-90 shadow-sm rounded-xl max-w-3xl mx-auto p-6 sm:p-8">
         <h2 className="text-2xl font-bold text-center mb-8 text-sky-900">
           Add Shipping Details
         </h2>
@@ -225,14 +225,14 @@ const LocationSelector = () => {
         {/* Proceed Button */}
         {isFormComplete && (
           <div className="text-center mt-6">
-            <h5 className="font-semibold mb-4">
+            <h5 className="hidden sm:block font-semibold mb-4">
               Please check the details before submitting.
             </h5>
             <button
               onClick={handleProceedToCheckout}
-              className="bg-sky-600 hover:bg-sky-700 text-white px-8 py-3 rounded-lg font-semibold shadow-md transition-colors"
+              className="bg-sky-600 hover:bg-sky-700 text-white  px-6 py-2 sm:px-8 sm:py-3 rounded-lg font-semibold shadow-md transition-colors"
             >
-              Proceed To Checkout
+              Proceed
             </button>
           </div>
         )}

@@ -47,14 +47,14 @@ const Success = () => {
           className={` ${screenWidth > 800 ? "w-auto max-w-md" : "w-full"}`}
           loading="lazy"
         />
-        <h2 className="text-3xl font-bold text-sky-900 mb-6">
+        <h2 className="text-2xl sm:text-3xl font-bold text-sky-900 mb-6">
           Payment Successful!
         </h2>
         <Link
           to="/myorders"
-          className="text-xl text-sky-700 font-semibold hover:underline"
+          className="text-lg sm:text-xl text-sky-700 font-semibold hover:underline"
         >
-          See Your Orders...
+          See Your Orders
         </Link>
       </div>
     </div>

@@ -93,12 +93,12 @@ function Payment() {
         </span>
       </div>
       <div className="bg-white rounded-2xl shadow-sm p-10 max-w-md w-full text-center">
-        <h1 className="text-3xl font-bold text-sky-800 mb-6">Complete Payment</h1>
-        <p className="text-lg text-slate-700 mb-6">Pay securely with Razorpay</p>
+        <h1 className="text-xl sm:text-3xl font-bold text-sky-800 mb-6">Complete Payment</h1>
+        <p className="text-base sm:text-lg text-slate-700 mb-6">Pay securely with Razorpay</p>
         <button
           onClick={handlePayment}
           disabled={loading}
-          className="w-full py-3 rounded-xl text-white font-semibold text-lg shadow-md bg-blue-600 hover:bg-blue-700 transition"
+          className="w-full py-2 sm:py-3 rounded-xl text-white font-semibold text-base sm:text-lg shadow-md bg-blue-600 hover:bg-blue-700 transition"
         >
           {loading ? "Processing..." : `Pay ₹${totalprice}`}
         </button>

@@ -1,24 +1,10 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const ConfirmOrder = () => {
   const navigate = useNavigate();
   const { cartitems } = useSelector((state) => state.cart);
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setScreenWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-
-    if (localStorage.getItem("width") !== null) {
-      setScreenWidth(parseInt(localStorage.getItem("width")));
-    } else {
-      setScreenWidth(window.innerWidth);
-    }
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -36,10 +22,9 @@ const ConfirmOrder = () => {
   };
 
   return (
-    <div className="min-h-screen bg-sky-100 py-24 md:py-24 px-6 sm:px-12 lg:px-20">
-
-      {/* Step Tracker */}
-      <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
+    <div className="min-h-screen bg-sky-50 py-20 sm:px-12 lg:px-20">
+      <div className="bg-white rounded-xl shadow-md max-w-6xl mx-auto p-8">
+        <div className="flex flex-row justify-center items-center gap-6 text-red-600 text-lg font-bold mb-10">
         <Link to="/mycart" className="flex items-center gap-2 text-green-600">
           <i className="fa-solid fa-cart-shopping"></i>
           <span className="hidden md:inline">View Cart</span>
@@ -55,83 +40,91 @@ const ConfirmOrder = () => {
           <span className="hidden md:inline">Payment</span>
         </span>
       </div>
+        {/* HEADER */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center border-b pb-4 mb-6">
+          <h1 className="text-2xl font-bold text-sky-900">Order Summary</h1>
+          <Link
+            to="/mycart"
+            className="text-blue-600 font-medium hover:underline mt-2 md:mt-0"
+          >
+            Back to Cart
+          </Link>
+        </div>
 
-      <div className="bg-white bg-opacity-90 rounded-xl shadow-sm max-w-6xl mx-auto p-10">
-        <h1 className="text-center text-3xl font-extrabold mb-16 text-sky-900 leading-relaxed">
-          Order Summary
-        </h1>
-
-        <ul className="max-h-[400px] overflow-y-auto space-y-8 mb-16 px-4 sm:px-8">
+        {/* ORDER ITEMS */}
+        <div className="space-y-4">
           {cartitems.map((p) => (
-            <li
+            <div
               key={p.product}
-              className="flex flex-col sm:flex-row sm:items-center gap-6 bg-sky-50 p-6 rounded-lg shadow-sm"
+              className="p-4 rounded-lg flex flex-row sm:items-center gap-4 bg-sky-50"
             >
               <img
                 src={p.image}
                 alt={p.name}
-                className="w-28 h-28 rounded-lg object-cover flex-shrink-0"
+                className="w-24 h-24 rounded-lg object-cover"
               />
               <div className="flex-1">
-                <h3 className="text-xl font-semibold text-sky-800 leading-snug">{p.name}</h3>
-                <p className="text-gray-600 text-base mt-1">Price: ₹{p.price}</p>
-                <p className="text-gray-600 text-base mt-1">Quantity: {p.quantity}</p>
-                <p className="text-gray-800 font-bold text-base mt-2">
+                <h3 className="font-bold text-lg text-sky-800">{p.name}</h3>
+                <p className="text-gray-600">Quantity: {p.quantity}</p>
+                <p className="text-gray-800 font-semibold">
                   Total: ₹{(p.price * p.quantity).toFixed(2)}
                 </p>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
 
-        <div
-          className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-4xl mx-auto items-start"
-        >
+        {/* SHIPPING + INVOICE */}
+        <div className="grid md:grid-cols-2 gap-8 mt-10">
+          {/* SHIPPING ADDRESS */}
           <div>
-            <h2 className="text-2xl font-bold text-sky-900 mb-8">
-              Shipping Address:
+            <h2 className="text-xl font-semibold mb-4 text-sky-900">
+              Shipping Address
             </h2>
-            <div className="flex flex-col gap-4 text-gray-700 text-base max-w-md">
-              <div className="flex justify-between">
-                <span className="font-semibold">Name :</span>
-                <span>{shippingdet.userDetails.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-semibold">Phone :</span>
-                <span>{shippingdet.userDetails.phone}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-semibold">Address :</span>
-                <span>{shippingdet.userDetails.address}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-semibold">Country :</span>
-                <span>{shippingdet.selectedCountry.label}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-semibold">State :</span>
-                <span>{shippingdet.selectedState.label}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-semibold">City :</span>
-                <span>{shippingdet.selectedCity.label}</span>
-              </div>
+            <div className="space-y-2 text-gray-700">
+              <p>
+                <span className="font-medium">Name:</span>{" "}
+                {shippingdet.userDetails.name}
+              </p>
+              <p>
+                <span className="font-medium">Phone:</span>{" "}
+                {shippingdet.userDetails.phone}
+              </p>
+              <p>
+                <span className="font-medium">Address:</span>{" "}
+                {shippingdet.userDetails.address}
+              </p>
+              <p>
+                <span className="font-medium">Country:</span>{" "}
+                {shippingdet.selectedCountry.label}
+              </p>
+              <p>
+                <span className="font-medium">State:</span>{" "}
+                {shippingdet.selectedState.label}
+              </p>
+              <p>
+                <span className="font-medium">City:</span>{" "}
+                {shippingdet.selectedCity.label}
+              </p>
             </div>
           </div>
 
+          {/* INVOICE */}
           <div>
-            <h2 className="text-2xl font-bold text-sky-900 mb-8">Invoice Details:</h2>
-            <div className="text-gray-700 text-base max-w-md mx-auto space-y-4">
-              <div className="flex justify-between font-normal">
+            <h2 className="text-xl font-semibold mb-4 text-sky-900">
+              Invoice Details
+            </h2>
+            <div className="space-y-2 text-gray-700">
+              <div className="flex justify-between">
                 <span>Sub Total:</span>
                 <span>₹{getTotal().toFixed(2)}</span>
               </div>
-              <div className="flex justify-between font-normal">
+              <div className="flex justify-between">
                 <span>GST (18%):</span>
                 <span>₹{(getTotal() * 0.18).toFixed(2)}</span>
               </div>
-              <hr className="border-black border-2" />
-              <div className="flex justify-between font-bold text-2xl">
+              <hr className="my-3 border-gray-300" />
+              <div className="flex justify-between font-bold text-lg">
                 <span>Grand Total:</span>
                 <span>₹{(getTotal() * 1.18).toFixed(2)}</span>
               </div>
@@ -139,12 +132,15 @@ const ConfirmOrder = () => {
           </div>
         </div>
 
-        <button
-          onClick={navtopay}
-          className="block mx-auto mt-20 px-3 py-2 bg-blue-600 text-white font-semibold text-lg rounded-xl shadow-lg hover:bg-blue-700 transition-colors"
-        >
-          Proceed to Pay
-        </button>
+        {/* CTA BUTTON */}
+        <div className="text-center mt-12">
+          <button
+            onClick={navtopay}
+            className="px-6 py-2 sm:py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+          >
+            Proceed to Pay
+          </button>
+        </div>
       </div>
     </div>
   );
