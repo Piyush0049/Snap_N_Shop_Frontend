@@ -55,11 +55,11 @@ function Headers() {
           {/* Logo */}
           <Link
             to="/"
-            className="text-2xl tracking-wide text-sky-900 hover:opacity-80 flex items-center"
+            className="text-[22px] sm:text-2xl tracking-wide text-sky-900 hover:opacity-80 flex items-center"
             style={{ fontFamily: "fantasy" }}
           >
             Snap & Shop
-            <sup className="ml-1 text-base font-extrabold text-teal-600 animate-pulse">2.0</sup>
+            <sup className="ml-1 text-[14px] sm:text-base font-extrabold text-teal-600 animate-pulse">2.0</sup>
           </Link>
 
 

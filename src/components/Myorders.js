@@ -33,12 +33,12 @@ const Myorders = () => {
   }
 
   return (
-    <div className="min-h-screen bg-sky-100 py-20 md:py-20 px-4 md:px-10">
+    <div className="min-h-screen bg-sky-100 py-20 md:py-20 sm:px-4 md:px-10">
       {filteredOrders.length > 0 && orderdet !== null ? (
         filteredOrders.map((order) => (
           <div
             key={order._id}
-            className="bg-white shadow-sm rounded-lg mb-10 p-6 max-w-6xl mx-auto"
+            className="bg-white rounded-lg mb-10 p-6 max-w-6xl mx-auto border border-gray-200"
           >
             {/* HEADER */}
             <div className="flex flex-col md:flex-row md:justify-between md:items-center border-b pb-4 mb-6">
@@ -58,7 +58,7 @@ const Myorders = () => {
               {order.orderitems.map((p) => (
                 <div
                   key={p._id}
-                  className="bg-sky-50 p-4 rounded-lg flex flex-col sm:flex-row sm:items-center gap-4"
+                  className="p-2 rounded-lg flex flex-row sm:items-center gap-4"
                 >
                   <img
                     src={p.image}
@@ -67,7 +67,7 @@ const Myorders = () => {
                   />
                   <div className="flex-1">
                     <h3 className="font-bold text-lg text-sky-800">{p.name}</h3>
-                    <p className="text-gray-600">Price: ₹{p.price}</p>
+                    {/* <p className="text-gray-600">Price: ₹{p.price}</p> */}
                     <p className="text-gray-600">Quantity: {p.quantity}</p>
                     <p className="text-gray-800 font-semibold">
                       Total: ₹{p.price * p.quantity}

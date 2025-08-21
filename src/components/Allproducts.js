@@ -97,10 +97,10 @@ function Allproducts() {
     <Fragment>
       <div className="min-h-screen w-full bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200">
         {/* Heading */}
-        <div className="flex justify-between items-center px-6 md:px-12 pt-20">
-          <h3 className="text-black text-2xl md:text-4xl font-bold md:font-extrabold drop-shadow-md tracking-wide">
+        <div className="flex justify-end items-center px-6 md:px-12 pt-20">
+          {/* <h3 className="text-black text-2xl md:text-4xl font-bold md:font-extrabold drop-shadow-md tracking-wide">
             All Products
-          </h3>
+          </h3> */}
 
           {/* Filter Button for Small Screens */}
           <button

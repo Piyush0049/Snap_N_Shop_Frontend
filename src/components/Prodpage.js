@@ -50,13 +50,13 @@ function Prodpage() {
   };
 
   return (
-    <div className="bg-sky-100 md:mt-8 py-10 px-4 md:px-12 min-h-screen">
-      <div className="bg-white rounded-2xl shadow-lg max-w-7xl mx-auto p-8">
+    <div className=" md:mt-8 py-16 md:px-12 min-h-screen">
+      <div className=" rounded-2xl  max-w-7xl mx-auto px-4 px:8 py:p-8">
         {/* GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* LEFT - Product Gallery */}
           <div>
-            <div className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
+            <div className="rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
               <Carousel>
                 {product.images?.map((item, i) => (
                   <img
@@ -83,7 +83,7 @@ function Prodpage() {
               <h1 className="text-3xl lg:text-4xl font-extrabold text-sky-900 mb-4">
                 {product.name}
               </h1>
-              <p className="text-gray-700 mb-6 leading-relaxed">
+              <p className="text-gray-700 mb-6 leading-relaxed text-justify">
                 {product.description}
               </p>
             </div>
@@ -142,7 +142,7 @@ function Prodpage() {
               <button
                 onClick={addItem}
                 disabled={product.stock <= 0}
-                className={`flex-1 px-8 py-3 rounded-lg text-lg font-semibold shadow-lg transition-colors duration-300 ${product.stock > 0
+                className={`flex-1 px-7 py-2.5 rounded-lg text-base font-semibold shadow-lg transition-colors duration-300 ${product.stock > 0
                     ? "bg-sky-500 hover:bg-sky-600 text-white"
                     : "bg-gray-400 text-white cursor-not-allowed"
                   }`}
@@ -156,7 +156,7 @@ function Prodpage() {
                     ? setAddReviewSection((prev) => !prev)
                     : navigate("/login")
                 }
-                className="flex-1 px-8 py-3 rounded-lg text-lg font-semibold shadow-md bg-sky-700 hover:bg-sky-800 text-white"
+                className="flex-1 px-7 py-2.5 rounded-lg text-base font-semibold shadow-md bg-sky-700 hover:bg-sky-800 text-white"
               >
                 Submit Review
               </button>
@@ -213,8 +213,8 @@ function Prodpage() {
           {showReviews ? (
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h4 className="text-2xl font-semibold text-sky-900">
-                  Customer Reviews
+                <h4 className="text-xl sm:text-2xl font-semibold text-sky-900">
+                  Reviews
                 </h4>
                 <button
                   onClick={() => setShowReviews(false)}
@@ -231,7 +231,7 @@ function Prodpage() {
                   {product.reviews.map((rev) => (
                     <div
                       key={rev._id}
-                      className="bg-sky-50 border border-sky-200 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                      className="border border-sky-200 p-3 rounded-md hover:shadow-md transition-shadow"
                     >
                       <div className="flex justify-between items-center">
                         <h3 className="font-semibold text-sky-800">

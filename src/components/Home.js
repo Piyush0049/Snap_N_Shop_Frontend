@@ -89,7 +89,7 @@ function Home() {
             SNAP & SHOP!
           </h1>
           <h2
-            className="mt-6 text-sky-700 tracking-wide"
+            className="mt-2 text-sky-700 tracking-wide"
             style={{
               fontFamily: "fantasy",
               fontSize: screenWidth > 536 ? "2.4rem" : "1.5rem",
@@ -98,7 +98,7 @@ function Home() {
             ORDER WITH A "SNAP"
           </h2>
           <p className="text-lg md:text-xl mt-5 text-sky-800 font-medium max-w-xl mx-auto">
-            Shop smarter, faster, and greener with one click.
+            Shop smarter and faster with a click.
           </p>
           <Link
             to="/products"

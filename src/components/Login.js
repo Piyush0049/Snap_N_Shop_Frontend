@@ -95,10 +95,10 @@ const LoginPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 px-3 sm:px-4">
-      <div className="bg-white shadow-lg rounded-xl p-4 sm:p-8 w-full max-w-md">
+      <div className="bg-white shadow-sm rounded-md sm:rounded-xl p-4 sm:p-8 w-full max-w-md">
         {loginMode === "login" ? (
           <>
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-3">
+            <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-800 mb-3">
               <span className="text-indigo-600">Snap & Shop!</span>
             </h2>
             <p className="text-center text-gray-600 mb-6">
@@ -107,7 +107,7 @@ const LoginPage = () => {
           </>
         ) : (
           <>
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-3">
+            <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-800 mb-3">
               <span className="text-indigo-600">Snap & Shop!</span>
             </h2>
             <p className="text-center text-gray-600 mb-6">
