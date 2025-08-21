@@ -367,7 +367,7 @@ const Dashboard = () => {
                   onClick={update}
                   className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-6 py-2 rounded-lg transition-shadow shadow-sm"
                 >
-                  Update Status
+                  Update
                 </button>
               </div>
             </div>
