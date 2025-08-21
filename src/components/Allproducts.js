@@ -43,7 +43,7 @@ function Allproducts() {
   const onClickcateg = (e) => setcateg(e.target.innerText);
 
   const FilterContent = () => (
-    <div className="bg-white rounded-2xl shadow-lg p-6 w-full lg:w-72 h-fit border border-gray-200">
+    <div className="bg-white rounded-2xl shadow-lg p-6 w-72 h-fit border border-gray-200">
       
       <Slider
         value={range}
