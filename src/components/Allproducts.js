@@ -82,7 +82,7 @@ function Allproducts() {
                   ? "bg-blue-500 text-white"
                   : "hover:bg-blue-100 text-gray-800"
                 }`}
-              onClick={() => setcateg(cat === "None" ? "" : cat)} // 👈 Reset filter if "None"
+              onClick={() => setcateg(cat === "None" ? "" : cat)}
             >
               {cat}
             </li>
