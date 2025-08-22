@@ -130,8 +130,7 @@ const ConfirmOrder = () => {
             </div>
           </div>
         </div>
-
-        {/* CTA BUTTON */}
+        
         <div className="text-center mt-12">
           <button
             onClick={navtopay}
