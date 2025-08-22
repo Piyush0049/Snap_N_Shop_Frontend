@@ -107,13 +107,6 @@ function Allproducts() {
 
         {/* Content */}
         <div className="flex flex-col lg:flex-row gap-8 px-6 lg:px-12 py-12">
-          {/* Sidebar for Large Screens */}
-          {/* <aside className="hidden lg:block">
-            <FilterContent />
-          </aside> */}
-
-          {/* Products Grid */}
-          {/* Products Grid */}
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products &&
               products.map((product, index) => (
