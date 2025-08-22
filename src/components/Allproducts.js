@@ -130,7 +130,6 @@ function Allproducts() {
         )}
       </div>
 
-      {/* Modal for Filters on Mobile */}
       <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
