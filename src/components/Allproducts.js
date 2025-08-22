@@ -118,7 +118,6 @@ function Allproducts() {
 
         </div>
 
-        {/* Pagination */}
         {numofpages > 1 && (
           <div className="flex justify-center pb-10">
             <Pagination
