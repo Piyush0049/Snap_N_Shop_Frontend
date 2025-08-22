@@ -74,7 +74,6 @@ const ConfirmOrder = () => {
           ))}
         </div>
 
-        {/* SHIPPING + INVOICE */}
         <div className="grid md:grid-cols-2 gap-8 mt-10">
           {/* SHIPPING ADDRESS */}
           <div>
