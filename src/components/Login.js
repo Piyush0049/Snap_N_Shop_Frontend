@@ -74,7 +74,6 @@ const LoginPage = () => {
 
   const handleGoogleLogin = async (credentialResponse) => {
   try {
-    // send the raw credential (token) instead of decoded object
     const res = await dispatch(googleLogin(credentialResponse.credential));
 
     if (res?.success) {
