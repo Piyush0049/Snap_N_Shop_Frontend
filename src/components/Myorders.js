@@ -76,8 +76,6 @@ const Myorders = () => {
                 </div>
               ))}
             </div>
-
-            {/* ORDER DETAILS */}
             <div className="grid md:grid-cols-2 gap-8 mt-10">
               <div>
                 <h2 className="text-xl font-semibold mb-4 text-sky-900">
