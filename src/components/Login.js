@@ -194,7 +194,6 @@ const LoginPage = () => {
           </button>
         </form>
 
-        {/* 🔹 Google Login Button */}
         <div className="mt-4 flex justify-center">
           <GoogleLogin
             onSuccess={handleGoogleLogin}
