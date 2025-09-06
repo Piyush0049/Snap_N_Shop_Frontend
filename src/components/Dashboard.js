@@ -610,8 +610,6 @@ const Dashboard = () => {
               </form>
             </div>
           )}
-
-          {/* Users List */}
           {opt === "customers" && (
             <div className="max-h-[600px] overflow-y-auto bg-white p-6 rounded-lg shadow-sm">
               <ul className="space-y-4">
