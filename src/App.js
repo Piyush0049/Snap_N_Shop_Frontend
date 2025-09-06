@@ -15,6 +15,7 @@ import ConfirmOrder from "./components/ConfirmOrder";
 import Success from "./components/Success";
 import Myorders from "./components/Myorders";
 import Dashboard from "./components/Dashboard";
+import AuthCallbackPage from "./components/AuthCallbackPage"; // Import the new callback page
 import { useAuth } from "./context/AuthContext";
 
 function App() {
@@ -25,7 +26,6 @@ function App() {
       <div className="flex flex-col justify-center items-center min-h-screen bg-teal-100">
         <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin mb-6"></div>
       </div>
-
     );
   }
 
@@ -39,6 +39,9 @@ function App() {
         <Route path="/products/:keyword" element={<Allproducts />} />
         <Route path="/password/forgot" element={<Forgotpassword />} />
         <Route path="/auth/password/reset/:id" element={<Getnewpassword />} />
+
+        {/* New Route for Google OAuth callback */}
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
         {isAuthenticated ? (
           <>

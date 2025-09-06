@@ -5,10 +5,6 @@ import { userlogin, usersignup } from '../actions/useractions';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from "jwt-decode";
-import { googleLogin } from '../actions/useractions';
-// import {jwt_decode} from 'jwt-decode';
 
 const LoginPage = () => {
   const { checkAuth } = useAuth();
@@ -65,29 +61,23 @@ const LoginPage = () => {
           setCpassword("");
         }
       }
-      checkAuth(); 
+      checkAuth();
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong!");
     }
   };
 
-  const handleGoogleLogin = async (credentialResponse) => {
-  try {
-    const res = await dispatch(googleLogin(credentialResponse.credential));
+  // 🔹 New Google Redirect Handler
+  const handleGoogleRedirect = () => {
+    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    const redirectUri = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+    const scope = "openid email profile";
+    const responseType = "code";
 
-    if (res?.success) {
-      toast.success("Logged in with Google!");
-      navigate("/home");
-    } else {
-      toast.error(res?.message || "Google login failed!");
-    }
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
 
-    checkAuth();
-  } catch (err) {
-    console.error("Google login error:", err);
-    toast.error("Google login failed!");
-  }
+    window.location.href = authUrl;
 };
 
 
@@ -194,11 +184,14 @@ const LoginPage = () => {
           </button>
         </form>
 
+        {/* 🔹 New Google Button */}
         <div className="mt-4 flex justify-center">
-          <GoogleLogin
-            onSuccess={handleGoogleLogin}
-            onError={() => toast.error("Google login failed!")}
-          />
+          <button
+            onClick={handleGoogleRedirect}
+            className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-semibold transition-all duration-300 shadow-md"
+          >
+            Continue with Google
+          </button>
         </div>
 
         <div className="mt-6 text-center text-sm text-gray-600">
