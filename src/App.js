@@ -42,6 +42,7 @@ function App() {
 
         {/* New Route for Google OAuth callback */}
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
+        <Route path="/hello" element={<AuthCallbackPage />} />
 
         {isAuthenticated ? (
           <>
