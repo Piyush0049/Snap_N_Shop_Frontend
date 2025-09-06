@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateuser, updateuserpassword } from "../actions/useractions";
 import { useNavigate } from "react-router-dom";
-import { IconButton } from "@material-ui/core";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import { MdEdit, MdLockReset } from "react-icons/md";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Account = () => {
   const dispatch = useDispatch();
@@ -30,19 +28,17 @@ const Account = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   // Handlers
-  const handleUpdateProfile = async(e) => {
+  const handleUpdateProfile = async (e) => {
     e.preventDefault();
-    const a = await dispatch(updateuser(userName, email));
-    console.log(a);
+    await dispatch(updateuser(userName, email));
     setShowProfileModal(false);
     alert("✅ Profile updated successfully!");
     navigate("/");
   };
 
-  const handleUpdatePassword = async(e) => {
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
-    const a = await dispatch(updateuserpassword(oldPassword, newPassword, confirmPassword));
-    console.log(a);
+    await dispatch(updateuserpassword(oldPassword, newPassword, confirmPassword));
     setShowPasswordModal(false);
     alert("✅ Password updated successfully!");
     setOldPassword("");
@@ -61,15 +57,15 @@ const Account = () => {
 
         {/* User Details Cards */}
         <div className="grid md:grid-cols-3 gap-6">
-          <div className=" rounded-xl p-6 text-center hover:shadow-lg transition">
+          <div className="rounded-xl p-6 text-center hover:shadow-lg transition">
             <h3 className="text-sm font-medium text-sky-800">Full Name</h3>
             <p className="mt-2 text-lg font-semibold text-gray-800">{userdata?.username}</p>
           </div>
-          <div className=" rounded-xl p-6 text-center hover:shadow-lg transition">
+          <div className="rounded-xl p-6 text-center hover:shadow-lg transition">
             <h3 className="text-sm font-medium text-sky-800">Email</h3>
             <p className="mt-2 text-lg font-semibold text-gray-800">{userdata?.email}</p>
           </div>
-          <div className=" rounded-xl p-6 text-center hover:shadow-lg transition">
+          <div className="rounded-xl p-6 text-center hover:shadow-lg transition">
             <h3 className="text-sm font-medium text-sky-800">Joined On</h3>
             <p className="mt-2 text-lg font-semibold text-gray-800">
               {userdata?.createdAt?.slice(0, 10)}
@@ -157,13 +153,12 @@ const Account = () => {
                     onChange={(e) => setOldPassword(e.target.value)}
                     required
                   />
-                  <IconButton
+                  <span
                     onClick={() => setShowOldPassword((prev) => !prev)}
-                    className="!absolute !right-2 !top-1/2 !-translate-y-1/2"
-                    size="small"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-600"
                   >
-                    {showOldPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </IconButton>
+                    {showOldPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                  </span>
                 </div>
 
                 {/* New Password */}
@@ -176,13 +171,12 @@ const Account = () => {
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
                   />
-                  <IconButton
+                  <span
                     onClick={() => setShowNewPassword((prev) => !prev)}
-                    className="!absolute !right-2 !top-1/2 !-translate-y-1/2"
-                    size="small"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-600"
                   >
-                    {showNewPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </IconButton>
+                    {showNewPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                  </span>
                 </div>
 
                 {/* Confirm Password */}
@@ -195,13 +189,12 @@ const Account = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                   />
-                  <IconButton
+                  <span
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    className="!absolute !right-2 !top-1/2 !-translate-y-1/2"
-                    size="small"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-600"
                   >
-                    {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </IconButton>
+                    {showConfirmPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                  </span>
                 </div>
 
                 <div className="flex gap-4">

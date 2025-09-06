@@ -38,7 +38,7 @@ function App() {
         <Route path="/products" element={<Allproducts />} />
         <Route path="/products/:keyword" element={<Allproducts />} />
         <Route path="/password/forgot" element={<Forgotpassword />} />
-        <Route path="/auth/password/reset/:id" element={<Getnewpassword />} />
+        {/* <Route path="/auth/password/reset/:id" element={<Getnewpassword />} /> */}
 
         {/* New Route for Google OAuth callback */}
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
