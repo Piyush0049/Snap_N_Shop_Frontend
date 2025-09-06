@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { googleLogin } from '../actions/useractions'; // you'll create this
+import { googleLogin } from '../actions/useractions';
 import { useAuth } from '../context/AuthContext';
 
 const AuthCallbackPage = () => {
@@ -12,11 +12,22 @@ const AuthCallbackPage = () => {
     const { checkAuth } = useAuth();
 
     useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const code = params.get('code');
+        // Manually parse query params
+        const search = location.search.substring(1); // Remove "?"
+        const paramsArray = search.split("&");
+        let code = null;
+
+        for (let param of paramsArray) {
+            const [key, value] = param.split("=");
+            if (key === "code") {
+                code = decodeURIComponent(value);
+                break;
+            }
+        }
+
         console.log(code);
+
         if (!code) {
-        
             toast.error("Google login failed: No code received.");
             navigate("/login");
             return;
