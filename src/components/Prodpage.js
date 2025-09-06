@@ -3,9 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { productdetails, productreview } from "../actions/productActions";
 import { useParams, useNavigate } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
-import Carousel from "react-material-ui-carousel";
 import { addtocart } from "../actions/cartactions";
 import toast from "react-hot-toast";
+
+// New carousel import
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
 
 function Prodpage() {
   const [showReviews, setShowReviews] = useState(false);
@@ -50,14 +53,19 @@ function Prodpage() {
   };
 
   return (
-    <div className=" md:mt-8 py-16 md:px-12 min-h-screen">
-      <div className=" rounded-2xl  max-w-7xl mx-auto px-4 px:8 py:p-8">
+    <div className="md:mt-8 py-16 md:px-12 min-h-screen">
+      <div className="rounded-2xl max-w-7xl mx-auto px-4 py-8">
         {/* GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* LEFT - Product Gallery */}
           <div>
             <div className="rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
-              <Carousel>
+              <Carousel
+                showThumbs={false}
+                autoPlay={false}
+                infiniteLoop={true}
+                emulateTouch={true}
+              >
                 {product.images?.map((item, i) => (
                   <img
                     key={i}
@@ -137,7 +145,7 @@ function Prodpage() {
               </div>
             </div>
 
-            {/* Add to Cart + Review Button in SAME row */}
+            {/* Add to Cart + Review Button */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={addItem}
@@ -169,9 +177,7 @@ function Prodpage() {
           {/* Add Review Form */}
           {addReviewSection && (
             <div className="mb-10 bg-sky-50 border border-sky-200 p-6 rounded-lg shadow-sm">
-              <h2 className="text-xl font-bold text-sky-900 mb-4">
-                Add Your Review
-              </h2>
+              <h2 className="text-xl font-bold text-sky-900 mb-4">Add Your Review</h2>
               <form onSubmit={handleSubmit}>
                 <input
                   type="text"
@@ -193,11 +199,9 @@ function Prodpage() {
                   required
                 >
                   <option value="">Select Rating</option>
-                  <option value={1}>1 Star</option>
-                  <option value={2}>2 Stars</option>
-                  <option value={3}>3 Stars</option>
-                  <option value={4}>4 Stars</option>
-                  <option value={5}>5 Stars</option>
+                  {[1, 2, 3, 4, 5].map((r) => (
+                    <option key={r} value={r}>{r} Star{r > 1 ? "s" : ""}</option>
+                  ))}
                 </select>
                 <button
                   type="submit"
@@ -213,9 +217,7 @@ function Prodpage() {
           {showReviews ? (
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h4 className="text-xl sm:text-2xl font-semibold text-sky-900">
-                  Reviews
-                </h4>
+                <h4 className="text-xl sm:text-2xl font-semibold text-sky-900">Reviews</h4>
                 <button
                   onClick={() => setShowReviews(false)}
                   className="text-sm text-red-500 hover:underline"
@@ -234,12 +236,8 @@ function Prodpage() {
                       className="border border-sky-200 p-3 rounded-md hover:shadow-md transition-shadow"
                     >
                       <div className="flex justify-between items-center">
-                        <h3 className="font-semibold text-sky-800">
-                          {rev.username}
-                        </h3>
-                        <span className="bg-yellow-400 text-white text-xs px-2 py-1 rounded">
-                          {rev.rating} ★
-                        </span>
+                        <h3 className="font-semibold text-sky-800">{rev.username}</h3>
+                        <span className="bg-yellow-400 text-white text-xs px-2 py-1 rounded">{rev.rating} ★</span>
                       </div>
                       <p className="mt-2 text-gray-700">{rev.comment}</p>
                     </div>
@@ -258,7 +256,6 @@ function Prodpage() {
         </div>
       </div>
     </div>
-
   );
 }
 
