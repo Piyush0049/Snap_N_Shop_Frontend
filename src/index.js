@@ -1,19 +1,17 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client'; // ✅ updated import
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { Provider } from 'react-redux';
-import { AuthProvider } from './context/AuthContext';
-import store, { persistor } from './store';
-import { Toaster } from 'react-hot-toast';
 import { BrowserRouter } from "react-router-dom";
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import './index.css';
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { AuthProvider } from "./context/AuthContext";
+import store, { persistor } from "./store";
+import { Toaster } from "react-hot-toast";
+import "./index.css";
 
-// Create root
-const container = document.getElementById('root');
-const root = createRoot(container); // ✅ createRoot replaces ReactDOM.render
+const container = document.getElementById("root");
+const root = createRoot(container);
 
 root.render(
   <Provider store={store}>
@@ -29,5 +27,3 @@ root.render(
     </PersistGate>
   </Provider>
 );
-
-reportWebVitals();
