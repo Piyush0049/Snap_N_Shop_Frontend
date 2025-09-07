@@ -41,8 +41,8 @@ function App() {
         {/* <Route path="/auth/password/reset/:id" element={<Getnewpassword />} /> */}
 
         {/* New Route for Google OAuth callback */}
-        <Route path="/auth/callback" element={<AuthCallbackPage />} />
-        <Route path="/hello" element={<AuthCallbackPage />} />
+        {/* <Route path="/auth/callback" element={<AuthCallbackPage />} /> */}
+        <Route path="/hello/google" element={<AuthCallbackPage />} />
 
         {isAuthenticated ? (
           <>
