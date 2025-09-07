@@ -68,7 +68,6 @@ const LoginPage = () => {
     }
   };
 
-  // 🔹 New Google Redirect Handler
   const handleGoogleRedirect = () => {
     const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
     const redirectUri = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
