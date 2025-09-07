@@ -99,7 +99,7 @@ const LoginPage = () => {
       scope: scope,
       ux_mode: 'popup', // popup login, no redirect
       callback: handleGoogleCallback,
-      redirect_uri: "postmessage", 
+      redirect_uri: "postmessage",
     });
 
     codeClient.requestCode();
@@ -146,8 +146,8 @@ const LoginPage = () => {
                     ? 'text'
                     : 'password'
                   : showSignupPassword
-                  ? 'text'
-                  : 'password'
+                    ? 'text'
+                    : 'password'
               }
               placeholder="Password"
               value={password}
@@ -169,8 +169,8 @@ const LoginPage = () => {
                   ? <AiOutlineEyeInvisible size={22} />
                   : <AiOutlineEye size={22} />
                 : showSignupPassword
-                ? <AiOutlineEyeInvisible size={22} />
-                : <AiOutlineEye size={22} />}
+                  ? <AiOutlineEyeInvisible size={22} />
+                  : <AiOutlineEye size={22} />}
             </button>
           </div>
 
@@ -203,13 +203,29 @@ const LoginPage = () => {
             {loginMode === 'login' ? 'Login' : 'Sign Up'}
           </button>
         </form>
-
-        {/* Google login */}
         <div className="mt-4 flex justify-center">
           <button
             onClick={handleGoogleRedirect}
-            className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-semibold transition-all duration-300 shadow-md"
+            className="w-full flex items-center justify-center bg-white hover:bg-gray-100 text-gray-700 font-semibold py-3 rounded-lg shadow-sm border border-gray-300 transition-all duration-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
           >
+            <svg className="w-6 h-6 mr-3" viewBox="0 0 48 48">
+              <path
+                fill="#EA4335"
+                d="M24 9.5c3.94 0 7.18 1.37 9.39 3.6l6.9-6.9C36.46 2.64 30.79 0 24 0 14.7 0 6.64 5.28 2.69 13l8.05 6.27C12.48 13.3 17.7 9.5 24 9.5z"
+              />
+              <path
+                fill="#4285F4"
+                d="M46.1 24.5c0-1.57-.14-3.08-.39-4.5H24v9h12.6c-.54 2.9-2.2 5.36-4.7 7.02l7.14 5.56c4.15-3.83 7.06-9.48 7.06-17.08z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M11.17 28.77A14.52 14.52 0 0 1 10 24c0-1.66.29-3.26.82-4.77l-8.13-6.34A23.96 23.96 0 0 0 0 24c0 3.82.91 7.42 2.51 10.61l8.66-5.84z"
+              />
+              <path
+                fill="#34A853"
+                d="M24 48c6.48 0 11.92-2.14 15.89-5.81l-7.14-5.56c-2.02 1.36-4.63 2.17-8.75 2.17-6.3 0-11.52-3.8-13.45-9.23l-8.66 5.84C7.36 42.72 15.52 48 24 48z"
+              />
+            </svg>
             Continue with Google
           </button>
         </div>
