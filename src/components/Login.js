@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { userlogin, usersignup } from '../actions/useractions';
+import { userlogin, usersignup, googleLogin } from '../actions/useractions';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
@@ -16,7 +16,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [cpassword, setCpassword] = useState('');
-  const [loginMode, setLoginMode] = useState("login");
+  const [loginMode, setLoginMode] = useState('login');
 
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
@@ -26,86 +26,99 @@ const LoginPage = () => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
 
-    const savedWidth = localStorage.getItem("width");
-    if (savedWidth) {
-      setWindowWidth(parseInt(savedWidth));
-    }
+    const savedWidth = localStorage.getItem('width');
+    if (savedWidth) setWindowWidth(parseInt(savedWidth));
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Regular login / signup
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (loginMode === "login") {
+      if (loginMode === 'login') {
         const res = await dispatch(userlogin(email, password));
         if (res?.success) {
-          toast.success("Login successful!");
-          navigate("/home");
+          toast.success('Login successful!');
+          checkAuth();
+          navigate('/home');
         } else {
-          toast.error(res?.message || "Login failed!");
+          toast.error(res?.message || 'Login failed!');
         }
-      } else if (loginMode === "signup") {
+      } else if (loginMode === 'signup') {
         if (password === cpassword) {
           const myForm = { username, email, password };
           const res = await dispatch(usersignup(myForm));
           if (res?.success) {
-            toast.success("Signup successful!");
-            navigate("/home");
+            toast.success('Signup successful!');
+            checkAuth();
+            navigate('/home');
           } else {
-            toast.error(res?.message || "Signup failed!");
+            toast.error(res?.message || 'Signup failed!');
           }
         } else {
-          toast.error("Passwords do not match!");
-          setPassword("");
-          setCpassword("");
+          toast.error('Passwords do not match!');
+          setPassword('');
+          setCpassword('');
         }
       }
-      checkAuth();
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong!");
+      toast.error('Something went wrong!');
+    }
+  };
+
+  // ================= GOOGLE POPUP LOGIN =================
+  const handleGoogleCallback = async (response) => {
+    const code = response.code;
+    if (!code) {
+      toast.error('Google login failed: No code received');
+      return;
+    }
+    try {
+      const res = await dispatch(googleLogin(code)); // send code to backend
+      if (res?.success) {
+        toast.success('Logged in with Google!');
+        checkAuth();
+        navigate('/home');
+      } else {
+        toast.error(res?.message || 'Google login failed');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('An error occurred during Google login');
     }
   };
 
   const handleGoogleRedirect = () => {
     const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-    const redirectUri = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
-    const scope = "openid email profile";
-    const responseType = "code";
+    const scope = 'openid email profile';
 
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+    const codeClient = window.google.accounts.oauth2.initCodeClient({
+      client_id: clientId,
+      scope: scope,
+      ux_mode: 'popup', // popup login, no redirect
+      callback: handleGoogleCallback,
+      redirect_uri: "postmessage", 
+    });
 
-    window.location.href = authUrl;
-};
-
-
+    codeClient.requestCode();
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 px-3 sm:px-4">
       <div className="bg-white shadow-sm rounded-md sm:rounded-xl p-4 sm:p-8 w-full max-w-md">
-        {loginMode === "login" ? (
-          <>
-            <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-800 mb-3">
-              <span className="text-indigo-600">Snap & Shop!</span>
-            </h2>
-            <p className="text-center text-gray-600 mb-6">
-              Access all features by <b>logging in</b> to your account
-            </p>
-          </>
-        ) : (
-          <>
-            <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-800 mb-3">
-              <span className="text-indigo-600">Snap & Shop!</span>
-            </h2>
-            <p className="text-center text-gray-600 mb-6">
-              Join now for seamless shopping!
-            </p>
-          </>
-        )}
+        <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-800 mb-3">
+          <span className="text-indigo-600">Snap & Shop!</span>
+        </h2>
+        <p className="text-center text-gray-600 mb-6">
+          {loginMode === 'login'
+            ? 'Access all features by logging in to your account'
+            : 'Join now for seamless shopping!'}
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {loginMode === "signup" && (
+          {loginMode === 'signup' && (
             <input
               type="text"
               placeholder="Username"
@@ -127,7 +140,15 @@ const LoginPage = () => {
 
           <div className="relative">
             <input
-              type={loginMode === "login" ? (showLoginPassword ? "text" : "password") : (showSignupPassword ? "text" : "password")}
+              type={
+                loginMode === 'login'
+                  ? showLoginPassword
+                    ? 'text'
+                    : 'password'
+                  : showSignupPassword
+                  ? 'text'
+                  : 'password'
+              }
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -137,26 +158,26 @@ const LoginPage = () => {
             <button
               type="button"
               onClick={() =>
-                loginMode === "login"
+                loginMode === 'login'
                   ? setShowLoginPassword(!showLoginPassword)
                   : setShowSignupPassword(!showSignupPassword)
               }
               className="absolute right-3 top-3 text-gray-500"
             >
-              {loginMode === "login"
+              {loginMode === 'login'
                 ? showLoginPassword
                   ? <AiOutlineEyeInvisible size={22} />
                   : <AiOutlineEye size={22} />
                 : showSignupPassword
-                  ? <AiOutlineEyeInvisible size={22} />
-                  : <AiOutlineEye size={22} />}
+                ? <AiOutlineEyeInvisible size={22} />
+                : <AiOutlineEye size={22} />}
             </button>
           </div>
 
-          {loginMode === "signup" && (
+          {loginMode === 'signup' && (
             <div className="relative">
               <input
-                type={showSignupCPassword ? "text" : "password"}
+                type={showSignupCPassword ? 'text' : 'password'}
                 placeholder="Confirm Password"
                 value={cpassword}
                 onChange={(e) => setCpassword(e.target.value)}
@@ -179,11 +200,11 @@ const LoginPage = () => {
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold transition-all duration-300 shadow-md"
           >
-            {loginMode === "login" ? "Login" : "Sign Up"}
+            {loginMode === 'login' ? 'Login' : 'Sign Up'}
           </button>
         </form>
 
-        {/* 🔹 New Google Button */}
+        {/* Google login */}
         <div className="mt-4 flex justify-center">
           <button
             onClick={handleGoogleRedirect}
@@ -194,11 +215,11 @@ const LoginPage = () => {
         </div>
 
         <div className="mt-6 text-center text-sm text-gray-600">
-          {loginMode === "login" ? (
+          {loginMode === 'login' ? (
             <>
-              Do not have an account?{" "}
+              Do not have an account?{' '}
               <button
-                onClick={() => setLoginMode("signup")}
+                onClick={() => setLoginMode('signup')}
                 className="text-indigo-600 hover:underline"
               >
                 Sign up now!
@@ -206,9 +227,9 @@ const LoginPage = () => {
             </>
           ) : (
             <>
-              Already have an account?{" "}
+              Already have an account?{' '}
               <button
-                onClick={() => setLoginMode("login")}
+                onClick={() => setLoginMode('login')}
                 className="text-indigo-600 hover:underline"
               >
                 Log in now!

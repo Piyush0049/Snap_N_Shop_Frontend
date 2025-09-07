@@ -24,6 +24,8 @@ export const userlogin = (email, password) => async (dispatch) => {
         });
     }
 };
+
+
 export const googleLogin = (token) => async (dispatch) => {
     try {
         dispatch({ type: USER_LOGIN_REQUEST });
@@ -55,6 +57,8 @@ export const googleLogin = (token) => async (dispatch) => {
     }
 };
 
+
+
 export const usersignup = (userdata) => async (dispatch) => {
     try {
         dispatch({ type: USER_SIGNUP_REQUEST });
@@ -76,6 +80,8 @@ export const usersignup = (userdata) => async (dispatch) => {
         });
     }
 };
+
+
 
 export const userdataaccess = () => async (dispatch) => {
     try {
